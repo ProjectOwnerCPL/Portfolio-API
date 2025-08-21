@@ -1,0 +1,56 @@
+{
+  "company": {
+    "id": 1,
+    "name": "Fixer Solutions",
+    "founded": "2018",
+    "industry": "Technologie",
+    "location": "Montreal, Quebec",
+    "employees": 150,
+    "website": "www.fixer-solutions.com",
+    "description": "Entreprise spécialisée dans le développement de solutions logicielles innovantes",
+    "mission": "Transformer les idées en solutions numériques performantes",
+    "values": ["Innovation", "Qualité", "Collaboration", "Excellence"]
+  },
+  "projects": [
+    {
+      "id": 1,
+      "title": "Système de Gestion E-commerce",
+      "description": "Plateforme complète de commerce électronique avec gestion des stocks",
+      "technologies": ["Angular", "Node.js", "MongoDB"],
+      "status": "completed",
+      "startDate": "2023-01-15",
+      "endDate": "2023-06-30",
+      "budget": 75000,
+      "client": "TechCorp Inc."
+    },
+    {
+      "id": 2,
+      "title": "Application Mobile de Livraison",
+      "description": "App mobile pour service de livraison avec géolocalisation temps réel",
+      "technologies": ["React Native", "Firebase", "Google Maps API"],
+      "status": "in_progress",
+      "startDate": "2023-08-01",
+      "endDate": null,
+      "budget": 50000,
+      "client": "DeliveryFast"
+    }
+  ],
+  "portfolio": [
+    {
+      "id": 1,
+      "name": "Portfolio Développeur Full-Stack",
+      "description": "Site web professionnel showcasant les compétences et projets",
+      "type": "website",
+      "url": "https://mon-portfolio.com",
+      "technologies": ["Angular", "TypeScript", "CSS3"],
+      "imageUrl": "/assets/images/portfolio1.jpg",
+      "featured": true
+    }
+  ],
+  "stats": {
+    "totalProjects": 15,
+    "completedProjects": 12,
+    "activeClients": 8,
+    "satisfactionRate": 98
+  }
+}
