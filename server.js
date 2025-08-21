@@ -131,10 +131,10 @@ const startServer = async () => {
         }
         
         // Démarrage du serveur Express
-        app.listen(PORT, () => {
+        app.listen(PORT, '0.0.0.0', () => {
             console.log(`🚀 Serveur démarré sur le port ${PORT}`);
             console.log(`📍 Environnement: ${process.env.NODE_ENV || 'development'}`);
-            console.log(`🌐 API disponible sur: http://localhost:${PORT}`);
+            console.log(`🌐 API disponible sur: http://0.0.0.0:${PORT}`);
             
             if (connectDB) {
                 console.log(`🗄️  Base de données: MongoDB + Données en mémoire`);
@@ -149,9 +149,9 @@ const startServer = async () => {
         console.error('❌ Erreur MongoDB, basculement en mode mémoire:', error.message);
         
         // Démarrage en mode mémoire seulement
-        app.listen(PORT, () => {
+        app.listen(PORT, '0.0.0.0', () => {
             console.log(`🚀 Serveur démarré sur le port ${PORT} (mode mémoire)`);
-            console.log(`🌐 API disponible sur: http://localhost:${PORT}`);
+            console.log(`🌐 API disponible sur: http://0.0.0.0:${PORT}`);
             console.log(`💾 Endpoints disponibles: /api/company/*`);
         });
     }
