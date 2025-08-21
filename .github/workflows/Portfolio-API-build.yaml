@@ -50,7 +50,7 @@ jobs:
         run: |
           npm install
           cd frontend
-          npm ci --legacy-peer-deps
+          npm install --legacy-peer-deps
           npx ng build --configuration production
           cd ..
           ls -la dist/browser/
