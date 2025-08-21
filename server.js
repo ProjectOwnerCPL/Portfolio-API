@@ -83,8 +83,8 @@ app.get('/api/info', (req, res) => {
 // Route de santé pour diagnostiquer
 app.get('/health', (req, res) => {
     const fs = require('fs');
-    const staticPath = path.join(__dirname, 'dist/browser');
-    const indexExists = fs.existsSync(path.join(__dirname, 'dist/browser/index.html'));
+    const staticPath = path.join(__dirname, 'dist/frontend');
+    const indexExists = fs.existsSync(path.join(__dirname, 'dist/frontend/index.html'));
     
     res.json({
         status: 'OK',
