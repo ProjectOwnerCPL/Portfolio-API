@@ -1,0 +1,166 @@
+<div class="app-container">
+  <header class="header">
+    <div class="container">
+      <h1>{{ title() }}</h1>
+      <p class="subtitle">Interface Angular intégrée à l'API</p>
+      <div class="header-actions">
+        <a routerLink="/docs" class="docs-btn">
+          📚 Documentation API
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <div class="container">
+      <!-- Section Statistiques -->
+      <section class="section">
+        <h2>📊 Statistiques de l'Entreprise</h2>
+        <div class="stats-grid" *ngIf="stats()">
+          <div class="stat-card">
+            <h3>{{ stats().data?.employees?.total || 0 }}</h3>
+            <p>Employés Total</p>
+          </div>
+          <div class="stat-card">
+            <h3>{{ stats().data?.projects?.total || 0 }}</h3>
+            <p>Projets</p>
+          </div>
+          <div class="stat-card">
+            <h3>{{ stats().data?.company?.departments || 0 }}</h3>
+            <p>Départements</p>
+          </div>
+          <div class="stat-card">
+            <h3>{{ getActiveProjects() }}</h3>
+            <p>Projets Actifs</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section Départements -->
+      <section class="section">
+        <h2>🏢 Départements</h2>
+        <div class="departments-grid" *ngIf="departments().length > 0">
+          <div class="department-card" *ngFor="let dept of departments()">
+            <h3>{{ dept.name }}</h3>
+            <p>{{ dept.description }}</p>
+            <div class="department-meta">
+              <span class="manager">👤 Manager: {{ dept.manager }}</span>
+              <span class="employees-count">👥 {{ dept.employeeCount }} employés</span>
+            </div>
+            <div class="budget" *ngIf="dept.budget">
+              💰 Budget: {{ dept.budget }}€
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section Employés -->
+      <section class="section">
+        <h2>👥 Équipe Fixer Solutions</h2>
+        <div *ngIf="loading()" class="loading">
+          Chargement des données...
+        </div>
+        <div class="employees-grid" *ngIf="!loading() && employees().length > 0">
+          <div class="employee-card" *ngFor="let employee of employees()">
+            <div class="employee-info">
+              <h3>{{ employee.firstName }} {{ employee.lastName }}</h3>
+              <p class="role">{{ employee.position }}</p>
+              <p class="department">{{ employee.department }}</p>
+              <p class="contact">
+                <span class="email">✉️ {{ employee.email }}</span>
+                <span class="phone" *ngIf="employee.phone">📞 {{ employee.phone }}</span>
+              </p>
+              <div class="employee-meta" *ngIf="employee.salary">
+                <span class="salary">💰 {{ employee.salary }}€</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section Projets -->
+      <section class="section">
+        <h2>🚀 Nos Projets</h2>
+        <div class="projects-grid" *ngIf="projects().length > 0">
+          <div class="project-card" *ngFor="let project of projects()">
+            <div class="project-info">
+              <h3>{{ project.name }}</h3>
+              <p class="description">{{ project.description }}</p>
+              <div class="project-meta">
+                <span class="status" [ngClass]="'status-' + project.status.toLowerCase()">
+                  {{ project.status }}
+                </span>
+                <span class="budget" *ngIf="project.budget">
+                  💰 {{ project.budget }} €
+                </span>
+              </div>
+              <div class="technologies" *ngIf="project.technologies">
+                <span class="tech-tag" *ngFor="let tech of project.technologies">
+                  {{ tech }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section Données Financières -->
+      <section class="section">
+        <h2>💰 Données Financières</h2>
+        <div class="financial-grid" *ngIf="financialData().length > 0">
+          <div class="financial-card" *ngFor="let finance of financialData()">
+            <h3>Année {{ finance.year }}</h3>
+            <div class="financial-details">
+              <div class="financial-item">
+                <span class="label">Revenus:</span>
+                <span class="amount revenue">{{ finance.revenue }}€</span>
+              </div>
+              <div class="financial-item">
+                <span class="label">Dépenses:</span>
+                <span class="amount expense">{{ finance.expenses }}€</span>
+              </div>
+              <div class="financial-item">
+                <span class="label">Profit:</span>
+                <span class="amount profit" [ngClass]="finance.profit >= 0 ? 'positive' : 'negative'">
+                  {{ finance.profit }}€
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section Actions -->
+      <section class="section">
+        <h2>⚡ Actions</h2>
+        <div class="actions">
+          <button class="btn btn-primary" (click)="loadEmployees()">
+            🔄 Actualiser Employés
+          </button>
+          <button class="btn btn-secondary" (click)="loadProjects()">
+            🔄 Actualiser Projets
+          </button>
+          <button class="btn btn-tertiary" (click)="loadDepartments()">
+            🔄 Actualiser Départements
+          </button>
+          <button class="btn btn-quaternary" (click)="loadFinancialData()">
+            💰 Actualiser Finances
+          </button>
+          <button class="btn btn-stats" (click)="loadStats()">
+            📊 Actualiser Statistiques
+          </button>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2025 Fixer Solutions - API Portfolio avec Angular</p>
+      <p>
+        <a href="/api" target="_blank">🔗 API</a> | 
+        <a routerLink="/docs">📚 Documentation</a>
+      </p>
+    </div>
+  </footer>
+</div>

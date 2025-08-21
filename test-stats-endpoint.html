@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Endpoint Statistiques</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .container { max-width: 800px; margin: 0 auto; }
+        .result { background: #f5f5f5; padding: 15px; border-radius: 5px; margin: 10px 0; }
+        .error { background: #ffebee; color: #c62828; }
+        .success { background: #e8f5e8; color: #2e7d32; }
+        pre { white-space: pre-wrap; word-wrap: break-word; }
+        button { padding: 10px 20px; margin: 5px; background: #4CAF50; color: white; border: none; border-radius: 3px; cursor: pointer; }
+        button:hover { background: #45a049; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Test Endpoint Statistiques MongoDB</h1>
+        
+        <button onclick="testStatsEndpoint()">📊 Tester /api/company-mongo/stats</button>
+        <button onclick="testAllEndpoints()">🔄 Tester Tous les Endpoints</button>
+        
+        <div id="results"></div>
+    </div>
+
+    <script>
+        async function testStatsEndpoint() {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '<p>⏳ Test en cours...</p>';
+            
+            try {
+                const response = await fetch('/api/company-mongo/stats');
+                const data = await response.json();
+                
+                if (response.ok) {
+                    resultsDiv.innerHTML = `
+                        <div class="result success">
+                            <h3>✅ Statistiques chargées avec succès!</h3>
+                            <h4>📊 Données reçues:</h4>
+                            <p><strong>Employés Total:</strong> ${data.data?.employees?.total || 'N/A'}</p>
+                            <p><strong>Projets Total:</strong> ${data.data?.projects?.total || 'N/A'}</p>
+                            <p><strong>Départements:</strong> ${data.data?.company?.departments || 'N/A'}</p>
+                            <p><strong>Projets par Status:</strong></p>
+                            <ul>
+                                ${data.data?.projects?.byStatus?.map(p => 
+                                    `<li>${p._id}: ${p.count} projets</li>`
+                                ).join('') || '<li>Aucune donnée</li>'}
+                            </ul>
+                            <h4>🗂️ Données brutes:</h4>
+                            <pre>${JSON.stringify(data, null, 2)}</pre>
+                        </div>
+                    `;
+                } else {
+                    resultsDiv.innerHTML = `
+                        <div class="result error">
+                            <h3>❌ Erreur ${response.status}</h3>
+                            <pre>${JSON.stringify(data, null, 2)}</pre>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                resultsDiv.innerHTML = `
+                    <div class="result error">
+                        <h3>❌ Erreur de connexion</h3>
+                        <p>${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        async function testAllEndpoints() {
+            const endpoints = [
+                { name: 'Statistiques', url: '/api/company-mongo/stats' },
+                { name: 'Employés', url: '/api/company-mongo/employees' },
+                { name: 'Projets', url: '/api/company-mongo/projects' },
+                { name: 'Départements', url: '/api/company-mongo/departments' },
+                { name: 'Données Financières', url: '/api/company-mongo/financial' }
+            ];
+
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '<p>⏳ Test de tous les endpoints...</p>';
+            
+            let results = '<h3>📋 Résultats des tests:</h3>';
+            
+            for (const endpoint of endpoints) {
+                try {
+                    const response = await fetch(endpoint.url);
+                    const data = await response.json();
+                    
+                    if (response.ok) {
+                        const count = Array.isArray(data.data) ? data.data.length : (data.data ? 1 : 0);
+                        results += `
+                            <div class="result success">
+                                <strong>✅ ${endpoint.name}:</strong> ${count} éléments trouvés
+                            </div>
+                        `;
+                    } else {
+                        results += `
+                            <div class="result error">
+                                <strong>❌ ${endpoint.name}:</strong> Erreur ${response.status}
+                            </div>
+                        `;
+                    }
+                } catch (error) {
+                    results += `
+                        <div class="result error">
+                            <strong>❌ ${endpoint.name}:</strong> ${error.message}
+                        </div>
+                    `;
+                }
+            }
+            
+            resultsDiv.innerHTML = results;
+        }
+
+        // Test automatique au chargement
+        window.onload = () => testStatsEndpoint();
+    </script>
+</body>
+</html>

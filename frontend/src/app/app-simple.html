@@ -1,0 +1,82 @@
+<div class="app-container">
+  <header class="header">
+    <div class="container">
+      <h1>{{ title() }}</h1>
+      <p class="subtitle">Interface Angular intégrée à l'API</p>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <div class="container">
+      <!-- Section Employés -->
+      <section class="section">
+        <h2>👥 Équipe Fixer Solutions</h2>
+        <div *ngIf="loading()" class="loading">
+          Chargement des données...
+        </div>
+        <div class="employees-grid" *ngIf="!loading() && employees().length > 0">
+          <div class="employee-card" *ngFor="let employee of employees()">
+            <div class="employee-info">
+              <h3>{{ employee.firstName }} {{ employee.lastName }}</h3>
+              <p class="role">{{ employee.position }}</p>
+              <p class="department">{{ employee.department }}</p>
+              <p class="contact">
+                <span class="email">✉️ {{ employee.email }}</span>
+                <span class="phone" *ngIf="employee.phone">📞 {{ employee.phone }}</span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section Projets -->
+      <section class="section">
+        <h2>🚀 Nos Projets</h2>
+        <div class="projects-grid" *ngIf="projects().length > 0">
+          <div class="project-card" *ngFor="let project of projects()">
+            <div class="project-info">
+              <h3>{{ project.name }}</h3>
+              <p class="description">{{ project.description }}</p>
+              <div class="project-meta">
+                <span class="status" [ngClass]="'status-' + project.status.toLowerCase()">
+                  {{ project.status }}
+                </span>
+                <span class="budget" *ngIf="project.budget">
+                  💰 {{ project.budget }} €
+                </span>
+              </div>
+              <div class="technologies" *ngIf="project.technologies">
+                <span class="tech-tag" *ngFor="let tech of project.technologies">
+                  {{ tech }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section Actions -->
+      <section class="section">
+        <h2>⚡ Actions</h2>
+        <div class="actions">
+          <button class="btn btn-primary" (click)="loadEmployees()">
+            🔄 Actualiser Employés
+          </button>
+          <button class="btn btn-secondary" (click)="loadProjects()">
+            🔄 Actualiser Projets
+          </button>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2025 Fixer Solutions - API Portfolio avec Angular</p>
+      <p>
+        <a href="/api" target="_blank">🔗 API</a> | 
+        <a href="/docs" target="_blank">📚 Documentation</a>
+      </p>
+    </div>
+  </footer>
+</div>

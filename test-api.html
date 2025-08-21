@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test API Fixer Solutions</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 20px;
+        }
+        .endpoints {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .result {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px 0;
+            width: 100%;
+            font-size: 14px;
+        }
+        button:hover {
+            background: #5a67d8;
+        }
+        pre {
+            background: #f8f8f8;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            max-height: 600px;
+            overflow-y: auto;
+            border-left: 4px solid #667eea;
+        }
+        .endpoint-group {
+            margin-bottom: 20px;
+        }
+        .endpoint-group h3 {
+            color: #667eea;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .search-container {
+            margin-bottom: 20px;
+        }
+        .search-container input {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            width: 70%;
+            margin-right: 10px;
+        }
+        .search-container button {
+            width: 25%;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🏢 API Fixer Solutions</h1>
+        <p>Interface de test pour l'API de la compagnie fictive</p>
+    </div>
+
+    <div class="container">
+        <div class="endpoints">
+            <h2>📋 Endpoints Disponibles</h2>
+            
+            <div class="endpoint-group">
+                <h3>🏢 Informations Générales</h3>
+                <button onclick="testEndpoint('/api/company')">Infos Compagnie</button>
+                <button onclick="testEndpoint('/api/company/stats')">Statistiques</button>
+                <button onclick="testEndpoint('/api/company/financial')">Données Financières</button>
+            </div>
+
+            <div class="endpoint-group">
+                <h3>👥 Employés</h3>
+                <button onclick="testEndpoint('/api/company/employees')">Tous les Employés</button>
+                <button onclick="testEndpoint('/api/company/employees/1')">Employé ID 1</button>
+                <button onclick="testEndpoint('/api/company/employees/department/IT')">Employés IT</button>
+                <button onclick="testEndpoint('/api/company/employees/department/Développement')">Employés Dev</button>
+            </div>
+
+            <div class="endpoint-group">
+                <h3>📊 Projets</h3>
+                <button onclick="testEndpoint('/api/company/projects')">Tous les Projets</button>
+                <button onclick="testEndpoint('/api/company/projects/1')">Projet ID 1</button>
+                <button onclick="testEndpoint('/api/company/projects/status/En cours')">Projets en Cours</button>
+                <button onclick="testEndpoint('/api/company/projects/status/Terminé')">Projets Terminés</button>
+            </div>
+
+            <div class="endpoint-group">
+                <h3>🏢 Départements</h3>
+                <button onclick="testEndpoint('/api/company/departments')">Tous les Départements</button>
+            </div>
+
+            <div class="endpoint-group">
+                <h3>🔍 Recherche</h3>
+                <div class="search-container">
+                    <input type="text" id="searchInput" placeholder="Rechercher..." value="JavaScript">
+                    <button onclick="searchAPI()">Rechercher</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="result">
+            <h2>📊 Résultats</h2>
+            <div id="status"></div>
+            <div id="response">
+                <p>👈 Cliquez sur un endpoint pour voir les résultats</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:3000';
+
+        async function testEndpoint(endpoint) {
+            const statusDiv = document.getElementById('status');
+            const responseDiv = document.getElementById('response');
+            
+            statusDiv.innerHTML = `
+                <div class="status">
+                    ⏳ Test en cours: ${endpoint}
+                </div>
+            `;
+            
+            try {
+                const response = await fetch(API_BASE + endpoint);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    statusDiv.innerHTML = `
+                        <div class="status success">
+                            ✅ Succès: ${response.status} ${response.statusText}
+                        </div>
+                    `;
+                } else {
+                    statusDiv.innerHTML = `
+                        <div class="status error">
+                            ❌ Erreur: ${response.status} ${response.statusText}
+                        </div>
+                    `;
+                }
+                
+                responseDiv.innerHTML = `
+                    <h3>📍 ${endpoint}</h3>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                `;
+                
+            } catch (error) {
+                statusDiv.innerHTML = `
+                    <div class="status error">
+                        ❌ Erreur de connexion: ${error.message}
+                    </div>
+                `;
+                responseDiv.innerHTML = `
+                    <p>💡 Assurez-vous que le serveur API est démarré sur le port 3000</p>
+                    <pre>npm run dev</pre>
+                `;
+            }
+        }
+
+        async function searchAPI() {
+            const searchTerm = document.getElementById('searchInput').value;
+            if (!searchTerm) {
+                alert('Veuillez entrer un terme de recherche');
+                return;
+            }
+            
+            await testEndpoint(`/api/company/search?query=${encodeURIComponent(searchTerm)}`);
+        }
+
+        // Test automatique au chargement
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                testEndpoint('/api/company');
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

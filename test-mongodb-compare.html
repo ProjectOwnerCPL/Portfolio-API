@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test API Fixer Solutions - MongoDB vs Mémoire</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .api-section {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .memory-section {
+            border-left: 4px solid #28a745;
+        }
+        .mongodb-section {
+            border-left: 4px solid #17a2b8;
+        }
+        .result {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-top: 20px;
+        }
+        button {
+            border: none;
+            padding: 12px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px 0;
+            width: 100%;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        .memory-btn {
+            background: #28a745;
+            color: white;
+        }
+        .memory-btn:hover { background: #218838; }
+        
+        .mongodb-btn {
+            background: #17a2b8;
+            color: white;
+        }
+        .mongodb-btn:hover { background: #138496; }
+        
+        .compare-btn {
+            background: #ffc107;
+            color: #212529;
+            grid-column: span 2;
+        }
+        .compare-btn:hover { background: #e0a800; }
+        
+        pre {
+            background: #f8f8f8;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            max-height: 500px;
+            overflow-y: auto;
+            border-left: 4px solid #667eea;
+            font-size: 12px;
+        }
+        .endpoint-group h3 {
+            color: #667eea;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .status.warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        .search-container {
+            margin-bottom: 20px;
+        }
+        .search-container input {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            width: 60%;
+            margin-right: 10px;
+        }
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 3px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        .badge.memory { background: #28a745; color: white; }
+        .badge.mongodb { background: #17a2b8; color: white; }
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+        .feature-list li {
+            padding: 5px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .feature-list li:before {
+            content: "✅ ";
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🏢 API Fixer Solutions - Test Complet</h1>
+        <p>Comparaison MongoDB vs Données en Mémoire</p>
+        <div id="serverStatus" class="status warning">🔄 Vérification du serveur...</div>
+    </div>
+
+    <div class="comparison">
+        <!-- Section Mémoire -->
+        <div class="api-section memory-section">
+            <h2>💾 API Mémoire <span class="badge memory">RAPIDE</span></h2>
+            
+            <h3>🏢 Informations Générales</h3>
+            <button class="memory-btn" onclick="testEndpoint('/api/company', 'memory')">Infos Compagnie</button>
+            <button class="memory-btn" onclick="testEndpoint('/api/company/stats', 'memory')">Statistiques</button>
+
+            <h3>👥 Employés</h3>
+            <button class="memory-btn" onclick="testEndpoint('/api/company/employees', 'memory')">Tous les Employés</button>
+            <button class="memory-btn" onclick="testEndpoint('/api/company/employees/1', 'memory')">Employé ID 1</button>
+
+            <h3>📊 Projets</h3>
+            <button class="memory-btn" onclick="testEndpoint('/api/company/projects', 'memory')">Tous les Projets</button>
+            <button class="memory-btn" onclick="testEndpoint('/api/company/projects/status/En%20cours', 'memory')">Projets En Cours</button>
+
+            <h3>🔍 Recherche</h3>
+            <button class="memory-btn" onclick="testEndpoint('/api/company/search?query=JavaScript', 'memory')">Rechercher "JavaScript"</button>
+
+            <h4>Avantages:</h4>
+            <ul class="feature-list">
+                <li>Très rapide (ms)</li>
+                <li>Pas de base de données</li>
+                <li>Simple à déployer</li>
+                <li>Données statiques</li>
+            </ul>
+        </div>
+
+        <!-- Section MongoDB -->
+        <div class="api-section mongodb-section">
+            <h2>🍃 API MongoDB <span class="badge mongodb">AVANCÉ</span></h2>
+            
+            <h3>🔧 Administration</h3>
+            <button class="mongodb-btn" onclick="testEndpoint('/api/company-mongo/health', 'mongodb')">État MongoDB</button>
+            <button class="mongodb-btn" onclick="testEndpoint('/api/company-mongo/db-info', 'mongodb')">Infos Base</button>
+
+            <h3>🏢 Données Avancées</h3>
+            <button class="mongodb-btn" onclick="testEndpoint('/api/company-mongo', 'mongodb')">Infos Compagnie</button>
+            <button class="mongodb-btn" onclick="testEndpoint('/api/company-mongo/stats', 'mongodb')">Stats Calculées</button>
+
+            <h3>👥 Employés avec Relations</h3>
+            <button class="mongodb-btn" onclick="testEndpoint('/api/company-mongo/employees?limit=3', 'mongodb')">3 Employés (Pagination)</button>
+            <button class="mongodb-btn" onclick="testEndpointWithId('/api/company-mongo/employees/', 'mongodb')">Employé avec Projets</button>
+
+            <h3>📊 Projets avec Équipes</h3>
+            <button class="mongodb-btn" onclick="testEndpoint('/api/company-mongo/projects', 'mongodb')">Projets + Équipes</button>
+            <button class="mongodb-btn" onclick="testEndpoint('/api/company-mongo/departments', 'mongodb')">Départements + Managers</button>
+
+            <h3>🔍 Recherche Avancée</h3>
+            <button class="mongodb-btn" onclick="testEndpoint('/api/company-mongo/search?query=Marie&type=employees', 'mongodb')">Recherche par Type</button>
+
+            <h4>Avantages:</h4>
+            <ul class="feature-list">
+                <li>Relations entre données</li>
+                <li>Pagination intégrée</li>
+                <li>Recherche avec regex</li>
+                <li>Validation automatique</li>
+                <li>Agrégations complexes</li>
+                <li>Persistance des données</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Boutons de comparaison -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 20px;">
+        <button class="compare-btn" onclick="compareEndpoints()">🔄 Comparer les APIs</button>
+        <button class="compare-btn" onclick="runFullTest()">🧪 Test Complet</button>
+        <button class="compare-btn" onclick="clearResults()">🗑️ Effacer</button>
+    </div>
+
+    <!-- Zone de recherche -->
+    <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Terme de recherche..." value="JavaScript">
+        <button class="memory-btn" style="width: 18%;" onclick="searchBoth()">Recherche Comparative</button>
+    </div>
+
+    <!-- Résultats -->
+    <div class="result">
+        <h2>📊 Résultats des Tests</h2>
+        <div id="status"></div>
+        <div id="response">
+            <p>👈 Cliquez sur un endpoint pour voir les résultats</p>
+            <p>💡 <strong>Tip:</strong> Utilisez "Comparer les APIs" pour voir les différences</p>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:3000';
+        let hasMongoDb = false;
+
+        // Vérifier l'état du serveur au chargement
+        async function checkServerStatus() {
+            try {
+                const response = await fetch(API_BASE);
+                const data = await response.json();
+                
+                hasMongoDb = data.endpoints.company_mongodb !== undefined;
+                
+                const statusDiv = document.getElementById('serverStatus');
+                if (hasMongoDb) {
+                    statusDiv.className = 'status success';
+                    statusDiv.innerHTML = '✅ Serveur OK - MongoDB + Mémoire disponibles';
+                } else {
+                    statusDiv.className = 'status warning';
+                    statusDiv.innerHTML = '⚠️ Serveur OK - Mode mémoire uniquement (MongoDB non disponible)';
+                }
+                
+                // Désactiver les boutons MongoDB si non disponible
+                if (!hasMongoDb) {
+                    const mongoButtons = document.querySelectorAll('.mongodb-btn');
+                    mongoButtons.forEach(btn => {
+                        btn.disabled = true;
+                        btn.style.opacity = '0.5';
+                        btn.title = 'MongoDB non disponible - npm install mongoose';
+                    });
+                }
+                
+            } catch (error) {
+                const statusDiv = document.getElementById('serverStatus');
+                statusDiv.className = 'status error';
+                statusDiv.innerHTML = '❌ Serveur non disponible - Démarrer avec: npm run dev';
+            }
+        }
+
+        async function testEndpoint(endpoint, type) {
+            const statusDiv = document.getElementById('status');
+            const responseDiv = document.getElementById('response');
+            
+            const typeLabel = type === 'mongodb' ? '🍃 MongoDB' : '💾 Mémoire';
+            
+            statusDiv.innerHTML = `
+                <div class="status">
+                    ⏳ Test en cours: ${typeLabel} - ${endpoint}
+                </div>
+            `;
+            
+            try {
+                const startTime = Date.now();
+                const response = await fetch(API_BASE + endpoint);
+                const endTime = Date.now();
+                const data = await response.json();
+                
+                if (response.ok) {
+                    statusDiv.innerHTML = `
+                        <div class="status success">
+                            ✅ ${typeLabel} - ${response.status} ${response.statusText} (${endTime - startTime}ms)
+                        </div>
+                    `;
+                } else {
+                    statusDiv.innerHTML = `
+                        <div class="status error">
+                            ❌ ${typeLabel} - ${response.status} ${response.statusText}
+                        </div>
+                    `;
+                }
+                
+                // Formatage spécial pour les données MongoDB
+                let formattedData = data;
+                if (data.pagination) {
+                    formattedData = {
+                        ...data,
+                        pagination_info: `Page ${data.pagination.page}/${data.pagination.pages} (${data.pagination.total} total)`
+                    };
+                }
+                
+                responseDiv.innerHTML = `
+                    <h3>${typeLabel} 📍 ${endpoint}</h3>
+                    <pre>${JSON.stringify(formattedData, null, 2)}</pre>
+                `;
+                
+            } catch (error) {
+                statusDiv.innerHTML = `
+                    <div class="status error">
+                        ❌ Erreur ${typeLabel}: ${error.message}
+                    </div>
+                `;
+                responseDiv.innerHTML = `
+                    <p>💡 Assurez-vous que le serveur API est démarré sur le port 3000</p>
+                    <pre>npm run dev</pre>
+                `;
+            }
+        }
+
+        // Test avec ID automatique (prendre le premier employé)
+        async function testEndpointWithId(baseEndpoint, type) {
+            try {
+                // D'abord récupérer la liste des employés
+                const listResponse = await fetch(API_BASE + '/api/company-mongo/employees?limit=1');
+                const listData = await listResponse.json();
+                
+                if (listData.success && listData.data.length > 0) {
+                    const employeeId = listData.data[0]._id;
+                    await testEndpoint(baseEndpoint + employeeId, type);
+                } else {
+                    document.getElementById('status').innerHTML = `
+                        <div class="status error">❌ Aucun employé trouvé pour le test</div>
+                    `;
+                }
+            } catch (error) {
+                document.getElementById('status').innerHTML = `
+                    <div class="status error">❌ Erreur: ${error.message}</div>
+                `;
+            }
+        }
+
+        // Recherche comparative
+        async function searchBoth() {
+            const searchTerm = document.getElementById('searchInput').value;
+            if (!searchTerm) {
+                alert('Veuillez entrer un terme de recherche');
+                return;
+            }
+            
+            const responseDiv = document.getElementById('response');
+            responseDiv.innerHTML = '<h3>🔄 Recherche comparative en cours...</h3>';
+            
+            try {
+                const [memoryResponse, mongoResponse] = await Promise.all([
+                    fetch(API_BASE + `/api/company/search?query=${encodeURIComponent(searchTerm)}`),
+                    hasMongoDb ? fetch(API_BASE + `/api/company-mongo/search?query=${encodeURIComponent(searchTerm)}`) : Promise.resolve(null)
+                ]);
+                
+                const memoryData = await memoryResponse.json();
+                const mongoData = mongoResponse ? await mongoResponse.json() : null;
+                
+                responseDiv.innerHTML = `
+                    <h3>🔍 Recherche Comparative: "${searchTerm}"</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div>
+                            <h4>💾 Résultats Mémoire</h4>
+                            <pre>${JSON.stringify(memoryData, null, 2)}</pre>
+                        </div>
+                        <div>
+                            <h4>🍃 Résultats MongoDB</h4>
+                            <pre>${mongoData ? JSON.stringify(mongoData, null, 2) : 'MongoDB non disponible'}</pre>
+                        </div>
+                    </div>
+                `;
+                
+            } catch (error) {
+                responseDiv.innerHTML = `<p>❌ Erreur lors de la recherche: ${error.message}</p>`;
+            }
+        }
+
+        // Comparaison automatique
+        async function compareEndpoints() {
+            const endpoints = ['/stats', '/employees', '/projects'];
+            const responseDiv = document.getElementById('response');
+            
+            responseDiv.innerHTML = '<h3>🔄 Comparaison en cours...</h3>';
+            
+            let comparisons = '<h3>📊 Comparaison des APIs</h3>';
+            
+            for (const endpoint of endpoints) {
+                try {
+                    const memoryUrl = `/api/company${endpoint}`;
+                    const mongoUrl = `/api/company-mongo${endpoint}`;
+                    
+                    const [memoryRes, mongoRes] = await Promise.all([
+                        fetch(API_BASE + memoryUrl),
+                        hasMongoDb ? fetch(API_BASE + mongoUrl) : Promise.resolve(null)
+                    ]);
+                    
+                    const memoryData = await memoryRes.json();
+                    const mongoData = mongoRes ? await mongoRes.json() : null;
+                    
+                    comparisons += `
+                        <div style="border: 1px solid #ddd; margin: 10px 0; padding: 15px; border-radius: 5px;">
+                            <h4>${endpoint}</h4>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; font-size: 12px;">
+                                <div>
+                                    <strong>💾 Mémoire:</strong><br>
+                                    Éléments: ${Array.isArray(memoryData.data) ? memoryData.data.length : 1}<br>
+                                    Type: ${typeof memoryData.data}
+                                </div>
+                                <div>
+                                    <strong>🍃 MongoDB:</strong><br>
+                                    ${mongoData ? `
+                                        Éléments: ${Array.isArray(mongoData.data) ? mongoData.data.length : 1}<br>
+                                        Pagination: ${mongoData.pagination ? 'Oui' : 'Non'}<br>
+                                        Relations: ${JSON.stringify(mongoData.data).includes('_id') ? 'Oui' : 'Non'}
+                                    ` : 'Non disponible'}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                } catch (error) {
+                    comparisons += `<p>❌ Erreur pour ${endpoint}: ${error.message}</p>`;
+                }
+            }
+            
+            responseDiv.innerHTML = comparisons;
+        }
+
+        // Test complet
+        async function runFullTest() {
+            const responseDiv = document.getElementById('response');
+            responseDiv.innerHTML = '<h3>🧪 Test complet en cours...</h3>';
+            
+            const tests = [
+                ['💾 Infos Compagnie Mémoire', '/api/company'],
+                ...(hasMongoDb ? [['🍃 Infos Compagnie MongoDB', '/api/company-mongo']] : []),
+                ['💾 Employés Mémoire', '/api/company/employees'],
+                ...(hasMongoDb ? [['🍃 Employés MongoDB', '/api/company-mongo/employees?limit=3']] : []),
+            ];
+            
+            let results = '<h3>🧪 Résultats du Test Complet</h3>';
+            
+            for (const [name, endpoint] of tests) {
+                try {
+                    const startTime = Date.now();
+                    const response = await fetch(API_BASE + endpoint);
+                    const endTime = Date.now();
+                    const data = await response.json();
+                    
+                    results += `
+                        <div style="margin: 10px 0; padding: 10px; border-left: 4px solid ${name.includes('MongoDB') ? '#17a2b8' : '#28a745'};">
+                            <strong>${name}</strong><br>
+                            Status: ${response.status} | Temps: ${endTime - startTime}ms | 
+                            Éléments: ${Array.isArray(data.data) ? data.data.length : 1}
+                        </div>
+                    `;
+                } catch (error) {
+                    results += `<div style="color: red;">❌ ${name}: ${error.message}</div>`;
+                }
+            }
+            
+            responseDiv.innerHTML = results;
+        }
+
+        function clearResults() {
+            document.getElementById('response').innerHTML = '<p>👈 Cliquez sur un endpoint pour voir les résultats</p>';
+            document.getElementById('status').innerHTML = '';
+        }
+
+        // Vérification au chargement
+        window.addEventListener('load', () => {
+            checkServerStatus();
+            setTimeout(() => {
+                if (hasMongoDb) {
+                    testEndpoint('/api/company-mongo/health', 'mongodb');
+                } else {
+                    testEndpoint('/api/company', 'memory');
+                }
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,464 @@
+/* Styles pour la page principale Fixer Solutions */
+.app-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  font-family: 'Arial', sans-serif;
+}
+
+.header {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  padding: 2rem 0;
+  text-align: center;
+  color: white;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 2.5rem;
+  font-weight: 700;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+.subtitle {
+  margin: 0.5rem 0 0 0;
+  font-size: 1.1rem;
+  opacity: 0.9;
+}
+
+.header-actions {
+  margin-top: 1.5rem;
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.docs-btn {
+  display: inline-block;
+  padding: 0.75rem 2rem;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  text-decoration: none;
+  border-radius: 25px;
+  font-weight: bold;
+  font-size: 1.1rem;
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
+}
+
+.docs-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.main-content {
+  padding: 2rem 0;
+}
+
+.section {
+  margin-bottom: 3rem;
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.section h2 {
+  margin: 0 0 1.5rem 0;
+  color: #2d3748;
+  font-size: 1.8rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.loading {
+  text-align: center;
+  padding: 2rem;
+  color: #4a5568;
+  font-size: 1.1rem;
+}
+
+.employees-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.employee-card {
+  background: #f7fafc;
+  border-radius: 8px;
+  padding: 1.5rem;
+  border-left: 4px solid #667eea;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.employee-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.employee-info h3 {
+  margin: 0 0 0.5rem 0;
+  color: #2d3748;
+  font-size: 1.25rem;
+}
+
+.role {
+  color: #667eea;
+  font-weight: 600;
+  margin: 0 0 0.25rem 0;
+}
+
+.department {
+  color: #4a5568;
+  margin: 0 0 1rem 0;
+  font-style: italic;
+}
+
+.contact {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.email, .phone {
+  color: #2d3748;
+  font-size: 0.9rem;
+}
+
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 1.5rem;
+}
+
+.project-card {
+  background: #f7fafc;
+  border-radius: 8px;
+  padding: 1.5rem;
+  border-top: 4px solid #48bb78;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.project-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.project-info h3 {
+  margin: 0 0 1rem 0;
+  color: #2d3748;
+  font-size: 1.25rem;
+}
+
+.description {
+  color: #4a5568;
+  margin: 0 0 1rem 0;
+  line-height: 1.5;
+}
+
+.project-meta {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.status {
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.status-active { background: #c6f6d5; color: #22543d; }
+.status-completed { background: #bee3f8; color: #2b6cb0; }
+.status-pending { background: #fed7d7; color: #c53030; }
+
+.budget {
+  color: #2d3748;
+  font-weight: 600;
+}
+
+.technologies {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.tech-tag {
+  background: #e2e8f0;
+  color: #2d3748;
+  padding: 0.25rem 0.5rem;
+  border-radius: 8px;
+  font-size: 0.8rem;
+}
+
+.actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 1rem;
+}
+
+.btn-primary {
+  background: #667eea;
+  color: white;
+}
+
+.btn-primary:hover {
+  background: #5a67d8;
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background: #48bb78;
+  color: white;
+}
+
+.btn-secondary:hover {
+  background: #38a169;
+  transform: translateY(-1px);
+}
+
+.btn-tertiary {
+  background: #ed8936;
+  color: white;
+}
+
+.btn-tertiary:hover {
+  background: #dd6b20;
+  transform: translateY(-1px);
+}
+
+.btn-quaternary {
+  background: #9f7aea;
+  color: white;
+}
+
+.btn-quaternary:hover {
+  background: #805ad5;
+  transform: translateY(-1px);
+}
+
+.btn-stats {
+  background: #38b2ac;
+  color: white;
+}
+
+.btn-stats:hover {
+  background: #319795;
+  transform: translateY(-1px);
+}
+
+/* Styles pour les statistiques */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.stat-card {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  padding: 1.5rem;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.stat-card h3 {
+  font-size: 2.5rem;
+  margin: 0 0 0.5rem 0;
+  font-weight: bold;
+}
+
+.stat-card p {
+  margin: 0;
+  opacity: 0.9;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Styles pour les départements */
+.departments-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.department-card {
+  background: #f7fafc;
+  border-radius: 8px;
+  padding: 1.5rem;
+  border-left: 4px solid #ed8936;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.department-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.department-card h3 {
+  margin: 0 0 1rem 0;
+  color: #2d3748;
+  font-size: 1.25rem;
+}
+
+.department-card p {
+  color: #4a5568;
+  margin: 0 0 1rem 0;
+  line-height: 1.5;
+}
+
+.department-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.manager, .employees-count {
+  color: #2d3748;
+  font-size: 0.9rem;
+}
+
+.department-card .budget {
+  color: #22543d;
+  font-weight: 600;
+  background: #c6f6d5;
+  padding: 0.5rem;
+  border-radius: 6px;
+  display: inline-block;
+}
+
+/* Styles pour les données financières */
+.financial-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.financial-card {
+  background: #f7fafc;
+  border-radius: 8px;
+  padding: 1.5rem;
+  border-top: 4px solid #9f7aea;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.financial-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.financial-card h3 {
+  margin: 0 0 1rem 0;
+  color: #2d3748;
+  font-size: 1.25rem;
+  text-align: center;
+}
+
+.financial-details {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.financial-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem;
+  background: white;
+  border-radius: 6px;
+  border-left: 3px solid #e2e8f0;
+}
+
+.financial-item .label {
+  font-weight: 600;
+  color: #4a5568;
+}
+
+.financial-item .amount {
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.revenue { 
+  color: #22543d; 
+  border-left-color: #48bb78;
+}
+
+.expense { 
+  color: #c53030; 
+  border-left-color: #f56565;
+}
+
+.profit.positive { 
+  color: #22543d; 
+  border-left-color: #48bb78;
+}
+
+.profit.negative { 
+  color: #c53030; 
+  border-left-color: #f56565;
+}
+
+/* Styles pour les informations supplémentaires des employés */
+.employee-meta {
+  margin-top: 1rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid #e2e8f0;
+}
+
+.salary {
+  color: #22543d;
+  font-weight: 600;
+  background: #c6f6d5;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.footer {
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 2rem 0;
+  text-align: center;
+}
+
+.footer p {
+  margin: 0.5rem 0;
+}
+
+.footer a {
+  color: #90cdf4;
+  text-decoration: none;
+}
+
+.footer a:hover {
+  color: #63b3ed;
+}

@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Portfolio Fixer Solutions - Documentation Interactive</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            font-weight: bold;
+            margin: 0.5rem;
+        }
+
+        .status-mongodb {
+            background: #28a745;
+            color: white;
+        }
+
+        .status-memory {
+            background: #ffc107;
+            color: #333;
+        }
+
+        .endpoints-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .endpoint-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .endpoint-section h2 {
+            color: #667eea;
+            margin-bottom: 1.5rem;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 0.5rem;
+        }
+
+        .endpoint {
+            margin-bottom: 2rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .endpoint-header {
+            background: #f8f9fa;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .method {
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .method-get {
+            background: #28a745;
+            color: white;
+        }
+
+        .method-post {
+            background: #007bff;
+            color: white;
+        }
+
+        .method-put {
+            background: #ffc107;
+            color: #333;
+        }
+
+        .method-delete {
+            background: #dc3545;
+            color: white;
+        }
+
+        .url {
+            font-family: 'Courier New', monospace;
+            background: #e9ecef;
+            padding: 0.25rem 0.5rem;
+            border-radius: 5px;
+            margin: 0 1rem;
+            flex-grow: 1;
+        }
+
+        .test-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .test-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .test-btn-get {
+            background: #28a745;
+            color: white;
+        }
+
+        .test-btn-post {
+            background: #007bff;
+            color: white;
+        }
+
+        .endpoint-body {
+            padding: 1rem;
+        }
+
+        .description {
+            margin-bottom: 1rem;
+            color: #666;
+            font-style: italic;
+        }
+
+        .response-container {
+            margin-top: 1rem;
+        }
+
+        .response-status {
+            padding: 0.5rem;
+            border-radius: 5px;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        .status-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .status-loading {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+
+        .response-json {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 5px;
+            padding: 1rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            white-space: pre-wrap;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .form-container {
+            margin-top: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .form-group textarea {
+            height: 120px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .stats-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 10px;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .endpoints-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .endpoint-header {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: stretch;
+            }
+            
+            .url {
+                margin: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🚀 API Portfolio Fixer Solutions</h1>
+            <p>Documentation Interactive & Tests en Temps Réel</p>
+            <div id="apiStatus">
+                <div class="status-badge status-loading">⏳ Vérification du statut...</div>
+            </div>
+        </div>
+
+        <!-- Statistiques -->
+        <div class="stats-section">
+            <h2>📊 Statistiques de l'API</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="employeeCount">-</div>
+                    <div>Employés</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="projectCount">-</div>
+                    <div>Projets</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="departmentCount">-</div>
+                    <div>Départements</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">2</div>
+                    <div>Types de Base</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Endpoints Grid -->
+        <div class="endpoints-grid">
+            <!-- Section MongoDB -->
+            <div class="endpoint-section">
+                <h2>🍃 Endpoints MongoDB</h2>
+
+                <!-- GET Employees -->
+                <div class="endpoint">
+                    <div class="endpoint-header">
+                        <span class="method method-get">GET</span>
+                        <div class="url">/api/company-mongo/employees</div>
+                        <button class="test-btn test-btn-get" onclick="testEndpoint('GET', '/api/company-mongo/employees', 'employees-response')">
+                            🧪 Tester
+                        </button>
+                    </div>
+                    <div class="endpoint-body">
+                        <div class="description">Récupère tous les employés depuis MongoDB</div>
+                        <div class="response-container">
+                            <div id="employees-status" class="response-status hidden"></div>
+                            <div id="employees-response" class="response-json"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- POST Employee -->
+                <div class="endpoint">
+                    <div class="endpoint-header">
+                        <span class="method method-post">POST</span>
+                        <div class="url">/api/company-mongo/employees</div>
+                        <button class="test-btn test-btn-post" onclick="toggleForm('employee-form')">
+                            ➕ Créer Employé
+                        </button>
+                    </div>
+                    <div class="endpoint-body">
+                        <div class="description">Créer un nouvel employé dans MongoDB</div>
+                        <div id="employee-form" class="form-container hidden">
+                            <div class="form-group">
+                                <label>Prénom *</label>
+                                <input type="text" id="emp-firstName" placeholder="Marie" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Nom *</label>
+                                <input type="text" id="emp-lastName" placeholder="Dupont" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Position *</label>
+                                <input type="text" id="emp-position" placeholder="Développeuse Full-Stack" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Département *</label>
+                                <select id="emp-department" required>
+                                    <option value="">Choisir...</option>
+                                    <option value="IT">IT</option>
+                                    <option value="Développement">Développement</option>
+                                    <option value="Design">Design</option>
+                                    <option value="Analytics">Analytics</option>
+                                    <option value="Management">Management</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Email *</label>
+                                <input type="email" id="emp-email" placeholder="marie.dupont@fixer.com" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Téléphone</label>
+                                <input type="text" id="emp-phone" placeholder="+1-514-555-0123">
+                            </div>
+                            <div class="form-group">
+                                <label>Salaire</label>
+                                <input type="number" id="emp-salary" placeholder="75000">
+                            </div>
+                            <div class="form-group">
+                                <label>Compétences (séparées par des virgules)</label>
+                                <input type="text" id="emp-skills" placeholder="JavaScript, React, Node.js">
+                            </div>
+                            <button class="test-btn test-btn-post" onclick="createEmployee()">
+                                🚀 Créer Employé
+                            </button>
+                        </div>
+                        <div class="response-container">
+                            <div id="employee-create-status" class="response-status hidden"></div>
+                            <div id="employee-create-response" class="response-json"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- GET Projects -->
+                <div class="endpoint">
+                    <div class="endpoint-header">
+                        <span class="method method-get">GET</span>
+                        <div class="url">/api/company-mongo/projects</div>
+                        <button class="test-btn test-btn-get" onclick="testEndpoint('GET', '/api/company-mongo/projects', 'projects-response')">
+                            🧪 Tester
+                        </button>
+                    </div>
+                    <div class="endpoint-body">
+                        <div class="description">Récupère tous les projets depuis MongoDB</div>
+                        <div class="response-container">
+                            <div id="projects-status" class="response-status hidden"></div>
+                            <div id="projects-response" class="response-json"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- POST Project -->
+                <div class="endpoint">
+                    <div class="endpoint-header">
+                        <span class="method method-post">POST</span>
+                        <div class="url">/api/company-mongo/projects</div>
+                        <button class="test-btn test-btn-post" onclick="toggleForm('project-form')">
+                            ➕ Créer Projet
+                        </button>
+                    </div>
+                    <div class="endpoint-body">
+                        <div class="description">Créer un nouveau projet dans MongoDB</div>
+                        <div id="project-form" class="form-container hidden">
+                            <div class="form-group">
+                                <label>Nom du Projet *</label>
+                                <input type="text" id="proj-name" placeholder="Application Mobile E-Commerce" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Description *</label>
+                                <textarea id="proj-description" placeholder="Description détaillée du projet..." required></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>Statut</label>
+                                <select id="proj-status">
+                                    <option value="Planification">Planification</option>
+                                    <option value="Actif">Actif</option>
+                                    <option value="Terminé">Terminé</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Budget</label>
+                                <input type="number" id="proj-budget" placeholder="150000">
+                            </div>
+                            <div class="form-group">
+                                <label>Technologies (séparées par des virgules)</label>
+                                <input type="text" id="proj-technologies" placeholder="React Native, Node.js, MongoDB">
+                            </div>
+                            <button class="test-btn test-btn-post" onclick="createProject()">
+                                🚀 Créer Projet
+                            </button>
+                        </div>
+                        <div class="response-container">
+                            <div id="project-create-status" class="response-status hidden"></div>
+                            <div id="project-create-response" class="response-json"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- GET Company Info -->
+                <div class="endpoint">
+                    <div class="endpoint-header">
+                        <span class="method method-get">GET</span>
+                        <div class="url">/api/company-mongo/info</div>
+                        <button class="test-btn test-btn-get" onclick="testEndpoint('GET', '/api/company-mongo/info', 'mongo-info-response')">
+                            🧪 Tester
+                        </button>
+                    </div>
+                    <div class="endpoint-body">
+                        <div class="description">Informations générales de l'entreprise (MongoDB)</div>
+                        <div class="response-container">
+                            <div id="mongo-info-status" class="response-status hidden"></div>
+                            <div id="mongo-info-response" class="response-json"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section Mémoire -->
+            <div class="endpoint-section">
+                <h2>💾 Endpoints Mémoire</h2>
+
+                <!-- GET Company Info Memory -->
+                <div class="endpoint">
+                    <div class="endpoint-header">
+                        <span class="method method-get">GET</span>
+                        <div class="url">/api/company/info</div>
+                        <button class="test-btn test-btn-get" onclick="testEndpoint('GET', '/api/company/info', 'memory-info-response')">
+                            🧪 Tester
+                        </button>
+                    </div>
+                    <div class="endpoint-body">
+                        <div class="description">Informations de l'entreprise (données en mémoire)</div>
+                        <div class="response-container">
+                            <div id="memory-info-status" class="response-status hidden"></div>
+                            <div id="memory-info-response" class="response-json"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- GET Employees Memory -->
+                <div class="endpoint">
+                    <div class="endpoint-header">
+                        <span class="method method-get">GET</span>
+                        <div class="url">/api/company/employees</div>
+                        <button class="test-btn test-btn-get" onclick="testEndpoint('GET', '/api/company/employees', 'memory-employees-response')">
+                            🧪 Tester
+                        </button>
+                    </div>
+                    <div class="endpoint-body">
+                        <div class="description">Liste des employés (données en mémoire)</div>
+                        <div class="response-container">
+                            <div id="memory-employees-status" class="response-status hidden"></div>
+                            <div id="memory-employees-response" class="response-json"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- GET Projects Memory -->
+                <div class="endpoint">
+                    <div class="endpoint-header">
+                        <span class="method method-get">GET</span>
+                        <div class="url">/api/company/projects</div>
+                        <button class="test-btn test-btn-get" onclick="testEndpoint('GET', '/api/company/projects', 'memory-projects-response')">
+                            🧪 Tester
+                        </button>
+                    </div>
+                    <div class="endpoint-body">
+                        <div class="description">Liste des projets (données en mémoire)</div>
+                        <div class="response-container">
+                            <div id="memory-projects-status" class="response-status hidden"></div>
+                            <div id="memory-projects-response" class="response-json"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Portfolio -->
+                <div class="endpoint">
+                    <div class="endpoint-header">
+                        <span class="method method-get">GET</span>
+                        <div class="url">/api/portfolio</div>
+                        <button class="test-btn test-btn-get" onclick="testEndpoint('GET', '/api/portfolio', 'portfolio-response')">
+                            🧪 Tester
+                        </button>
+                    </div>
+                    <div class="endpoint-body">
+                        <div class="description">Informations du portfolio</div>
+                        <div class="response-container">
+                            <div id="portfolio-status" class="response-status hidden"></div>
+                            <div id="portfolio-response" class="response-json"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact -->
+                <div class="endpoint">
+                    <div class="endpoint-header">
+                        <span class="method method-post">POST</span>
+                        <div class="url">/api/contact</div>
+                        <button class="test-btn test-btn-post" onclick="toggleForm('contact-form')">
+                            📧 Envoyer Message
+                        </button>
+                    </div>
+                    <div class="endpoint-body">
+                        <div class="description">Envoyer un message de contact</div>
+                        <div id="contact-form" class="form-container hidden">
+                            <div class="form-group">
+                                <label>Nom *</label>
+                                <input type="text" id="contact-name" placeholder="Jean Dupont" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Email *</label>
+                                <input type="email" id="contact-email" placeholder="jean.dupont@entreprise.com" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Sujet *</label>
+                                <input type="text" id="contact-subject" placeholder="Demande de devis" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Message *</label>
+                                <textarea id="contact-message" placeholder="Votre message..." required></textarea>
+                            </div>
+                            <button class="test-btn test-btn-post" onclick="sendContact()">
+                                📧 Envoyer
+                            </button>
+                        </div>
+                        <div class="response-container">
+                            <div id="contact-status" class="response-status hidden"></div>
+                            <div id="contact-response" class="response-json"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section Documentation -->
+        <div class="endpoint-section">
+            <h2>📚 Documentation & Liens</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem;">
+                <a href="/docs" target="_blank" class="test-btn test-btn-get" style="text-decoration: none; text-align: center; display: block;">
+                    📖 Documentation HTML
+                </a>
+                <a href="/api/info" target="_blank" class="test-btn test-btn-get" style="text-decoration: none; text-align: center; display: block;">
+                    ℹ️ Informations API
+                </a>
+                <button class="test-btn test-btn-post" onclick="loadStats()">
+                    🔄 Actualiser Stats
+                </button>
+                <button class="test-btn test-btn-get" onclick="testAllEndpoints()">
+                    🧪 Tester Tout
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = '';
+        
+        // Fonction utilitaire pour afficher les réponses
+        function showResponse(statusId, responseId, status, data, isError = false) {
+            const statusEl = document.getElementById(statusId);
+            const responseEl = document.getElementById(responseId);
+            
+            if (statusEl) {
+                statusEl.className = `response-status ${isError ? 'status-error' : 'status-success'}`;
+                statusEl.textContent = status;
+                statusEl.classList.remove('hidden');
+            }
+            
+            if (responseEl) {
+                responseEl.textContent = JSON.stringify(data, null, 2);
+            }
+        }
+
+        function showLoading(statusId, responseId) {
+            const statusEl = document.getElementById(statusId);
+            const responseEl = document.getElementById(responseId);
+            
+            if (statusEl) {
+                statusEl.className = 'response-status status-loading';
+                statusEl.textContent = '⏳ Chargement...';
+                statusEl.classList.remove('hidden');
+            }
+            
+            if (responseEl) {
+                responseEl.textContent = '';
+            }
+        }
+
+        // Test d'un endpoint
+        async function testEndpoint(method, url, responseId) {
+            const statusId = responseId.replace('-response', '-status');
+            showLoading(statusId, responseId);
+            
+            try {
+                const response = await fetch(API_BASE + url, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const data = await response.json();
+                showResponse(statusId, responseId, `✅ ${response.status} ${response.statusText}`, data);
+            } catch (error) {
+                showResponse(statusId, responseId, `❌ Erreur: ${error.message}`, { error: error.message }, true);
+            }
+        }
+
+        // Toggle form visibility
+        function toggleForm(formId) {
+            const form = document.getElementById(formId);
+            form.classList.toggle('hidden');
+        }
+
+        // Créer un employé
+        async function createEmployee() {
+            showLoading('employee-create-status', 'employee-create-response');
+            
+            const employeeData = {
+                firstName: document.getElementById('emp-firstName').value,
+                lastName: document.getElementById('emp-lastName').value,
+                position: document.getElementById('emp-position').value,
+                department: document.getElementById('emp-department').value,
+                email: document.getElementById('emp-email').value,
+                phone: document.getElementById('emp-phone').value,
+                salary: parseInt(document.getElementById('emp-salary').value) || undefined,
+                skills: document.getElementById('emp-skills').value.split(',').map(s => s.trim()).filter(s => s)
+            };
+
+            try {
+                const response = await fetch(API_BASE + '/api/company-mongo/employees', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(employeeData)
+                });
+                
+                const data = await response.json();
+                showResponse('employee-create-status', 'employee-create-response', `✅ ${response.status} ${response.statusText}`, data);
+                
+                if (response.ok) {
+                    // Reset form
+                    document.getElementById('employee-form').querySelectorAll('input, select').forEach(input => {
+                        input.value = '';
+                    });
+                    loadStats();
+                }
+            } catch (error) {
+                showResponse('employee-create-status', 'employee-create-response', `❌ Erreur: ${error.message}`, { error: error.message }, true);
+            }
+        }
+
+        // Créer un projet
+        async function createProject() {
+            showLoading('project-create-status', 'project-create-response');
+            
+            const projectData = {
+                name: document.getElementById('proj-name').value,
+                description: document.getElementById('proj-description').value,
+                status: document.getElementById('proj-status').value,
+                budget: parseInt(document.getElementById('proj-budget').value) || undefined,
+                technologies: document.getElementById('proj-technologies').value.split(',').map(s => s.trim()).filter(s => s)
+            };
+
+            try {
+                const response = await fetch(API_BASE + '/api/company-mongo/projects', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(projectData)
+                });
+                
+                const data = await response.json();
+                showResponse('project-create-status', 'project-create-response', `✅ ${response.status} ${response.statusText}`, data);
+                
+                if (response.ok) {
+                    // Reset form
+                    document.getElementById('project-form').querySelectorAll('input, select, textarea').forEach(input => {
+                        if (input.tagName === 'SELECT') {
+                            input.selectedIndex = 0;
+                        } else {
+                            input.value = '';
+                        }
+                    });
+                    loadStats();
+                }
+            } catch (error) {
+                showResponse('project-create-status', 'project-create-response', `❌ Erreur: ${error.message}`, { error: error.message }, true);
+            }
+        }
+
+        // Envoyer un message de contact
+        async function sendContact() {
+            showLoading('contact-status', 'contact-response');
+            
+            const contactData = {
+                name: document.getElementById('contact-name').value,
+                email: document.getElementById('contact-email').value,
+                subject: document.getElementById('contact-subject').value,
+                message: document.getElementById('contact-message').value
+            };
+
+            try {
+                const response = await fetch(API_BASE + '/api/contact', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(contactData)
+                });
+                
+                const data = await response.json();
+                showResponse('contact-status', 'contact-response', `✅ ${response.status} ${response.statusText}`, data);
+                
+                if (response.ok) {
+                    // Reset form
+                    document.getElementById('contact-form').querySelectorAll('input, textarea').forEach(input => {
+                        input.value = '';
+                    });
+                }
+            } catch (error) {
+                showResponse('contact-status', 'contact-response', `❌ Erreur: ${error.message}`, { error: error.message }, true);
+            }
+        }
+
+        // Charger les statistiques
+        async function loadStats() {
+            try {
+                // Charger les employés
+                const employeesResponse = await fetch(API_BASE + '/api/company-mongo/employees');
+                const employeesData = await employeesResponse.json();
+                document.getElementById('employeeCount').textContent = employeesData.data ? employeesData.data.length : 0;
+
+                // Charger les projets
+                const projectsResponse = await fetch(API_BASE + '/api/company-mongo/projects');
+                const projectsData = await projectsResponse.json();
+                document.getElementById('projectCount').textContent = projectsData.data ? projectsData.data.length : 0;
+
+                // Calculer les départements
+                if (employeesData.data) {
+                    const departments = [...new Set(employeesData.data.map(emp => emp.department))];
+                    document.getElementById('departmentCount').textContent = departments.length;
+                }
+            } catch (error) {
+                console.error('Erreur lors du chargement des statistiques:', error);
+            }
+        }
+
+        // Vérifier le statut de l'API
+        async function checkApiStatus() {
+            try {
+                const response = await fetch(API_BASE + '/api/info');
+                const data = await response.json();
+                
+                document.getElementById('apiStatus').innerHTML = `
+                    <div class="status-badge status-mongodb">✅ ${data.status}</div>
+                    <div class="status-badge status-memory">📊 ${data.database}</div>
+                `;
+            } catch (error) {
+                document.getElementById('apiStatus').innerHTML = `
+                    <div class="status-badge status-error">❌ API Non Disponible</div>
+                `;
+            }
+        }
+
+        // Tester tous les endpoints GET
+        async function testAllEndpoints() {
+            const endpoints = [
+                { url: '/api/company-mongo/employees', responseId: 'employees-response' },
+                { url: '/api/company-mongo/projects', responseId: 'projects-response' },
+                { url: '/api/company-mongo/info', responseId: 'mongo-info-response' },
+                { url: '/api/company/info', responseId: 'memory-info-response' },
+                { url: '/api/company/employees', responseId: 'memory-employees-response' },
+                { url: '/api/company/projects', responseId: 'memory-projects-response' },
+                { url: '/api/portfolio', responseId: 'portfolio-response' }
+            ];
+
+            for (const endpoint of endpoints) {
+                await testEndpoint('GET', endpoint.url, endpoint.responseId);
+                await new Promise(resolve => setTimeout(resolve, 500)); // Délai de 500ms entre chaque requête
+            }
+        }
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', function() {
+            checkApiStatus();
+            loadStats();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,179 @@
+<div class="docs-container">
+  <header class="docs-header">
+    <div class="container">
+      <a routerLink="/" class="back-btn">← Retour à la page principale</a>
+      <h1>🚀 API Documentation</h1>
+      <h2>Fixer Solutions - MongoDB API</h2>
+      <p>Documentation complète de l'API REST avec exemples</p>
+      <div class="status-badge">✅ Opérationnelle</div>
+      
+      <!-- Boutons GET/POST -->
+      <div class="mode-switcher">
+        <button 
+          class="mode-btn" 
+          [class.active]="currentMode() === 'GET'"
+          (click)="switchMode('GET')">
+          🔍 GET
+        </button>
+        <button 
+          class="mode-btn" 
+          [class.active]="currentMode() === 'POST'"
+          (click)="switchMode('POST')">
+          📝 POST
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Endpoints avec mode GET -->
+  <section class="endpoints-section" *ngIf="currentMode() === 'GET'">
+    <div class="container">
+      <h2>📋 Points d'API Disponibles</h2>
+      <div class="endpoints-list">
+        <div class="endpoint-item" *ngFor="let endpoint of apiEndpoints()">
+          <!-- Header avec méthode et nom -->
+          <div class="endpoint-header">
+            <span class="method method-{{ endpoint.method.toLowerCase() }}">{{ endpoint.method }}</span>
+            <h3>{{ endpoint.name }}</h3>
+            <button class="test-btn" (click)="testEndpoint(endpoint)">
+              🧪 Tester
+            </button>
+          </div>
+          
+          <!-- URL -->
+          <div class="endpoint-url">
+            <strong>URL:</strong> 
+            <code class="url-code">{{ endpoint.url }}</code>
+          </div>
+          
+          <!-- Description -->
+          <div class="endpoint-description">
+            <p>{{ endpoint.description }}</p>
+          </div>
+          
+          <!-- Exemple de sortie -->
+          <div class="endpoint-example">
+            <h4>📄 Exemple de réponse:</h4>
+            <pre class="example-json">{{ endpoint.example | json }}</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Endpoints avec mode POST -->
+  <section class="endpoints-section" *ngIf="currentMode() === 'POST'">
+    <div class="container">
+      <h2>📝 Points d'API Disponibles (Mode POST)</h2>
+      <div class="endpoints-list">
+        <div 
+          class="endpoint-item post-selectable" 
+          *ngFor="let endpoint of getPostEndpoints()"
+          [class.selected]="selectedPostEndpoint()?.name === endpoint.name"
+          (click)="selectPostEndpoint(endpoint)">
+          <div class="endpoint-header">
+            <span class="method method-post">POST</span>
+            <h3>{{ endpoint.name }}</h3>
+            <span class="select-indicator" *ngIf="selectedPostEndpoint()?.name === endpoint.name">✓ Sélectionné</span>
+          </div>
+          
+          <div class="endpoint-url">
+            <strong>URL:</strong> 
+            <code class="url-code">{{ endpoint.url }}</code>
+          </div>
+          
+          <div class="endpoint-description">
+            <p>{{ endpoint.description }}</p>
+          </div>
+          
+          <!-- Aperçu des données POST -->
+          <div class="endpoint-example">
+            <h4>📦 Exemple de données à envoyer:</h4>
+            <pre class="example-json">{{ endpoint.postData | json }}</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section fixe pour la sortie JSON -->
+  <section id="json-output" class="json-output-section">
+    <div class="container">
+      <h2>📄 Sortie JSON</h2>
+      
+      <div class="json-output-box" [class.expanded]="testResults()">
+        <div class="json-placeholder" *ngIf="!testResults()">
+          <p>💡 Cliquez sur "Tester" pour voir la sortie JSON ici</p>
+        </div>
+        
+        <div class="json-content" *ngIf="testResults()">
+          <div *ngIf="testResults()?.loading" class="loading-json">
+            ⏳ Test en cours pour {{ testResults().endpoint }}...
+          </div>
+          
+          <div *ngIf="testResults() && !testResults().loading" class="json-result-content">
+            <!-- Header du résultat -->
+            <div class="json-header">
+              <div class="json-status" [class.success]="testResults().success" [class.error]="!testResults().success">
+                {{ testResults().success ? '✅ Succès' : '❌ Erreur' }}
+              </div>
+              <div class="json-details">
+                <strong>{{ testResults().endpoint }}</strong> - {{ testResults().url }}
+              </div>
+              <button class="close-json-btn" (click)="clearResults()">✕</button>
+            </div>
+            
+            <!-- Contenu JSON -->
+            <div class="json-data">
+              <pre class="json-display" *ngIf="testResults().success">{{ testResults().data | json }}</pre>
+              <pre class="json-error-display" *ngIf="!testResults().success">{{ '{\n  "error": "' + testResults().error + '"\n}' }}</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section d'édition JSON pour mode POST -->
+  <section class="json-editor-section" *ngIf="currentMode() === 'POST' && selectedPostEndpoint()">
+    <div class="container">
+      <h2>✏️ Édition des données JSON</h2>
+      <div class="json-editor-box">
+        <div class="endpoint-info">
+          <h3>{{ selectedPostEndpoint().name }}</h3>
+          <p><strong>URL:</strong> <code>{{ selectedPostEndpoint().url }}</code></p>
+          <p>{{ selectedPostEndpoint().description }}</p>
+        </div>
+        
+        <div class="json-editor">
+          <textarea 
+            class="json-input"
+            [value]="postJsonData()"
+            (input)="updateJsonData($event)"
+            placeholder="Entrez vos données JSON ici..."
+            rows="15">
+          </textarea>
+        </div>
+        
+        <button 
+          class="submit-btn"
+          (click)="submitPostRequest()"
+          [disabled]="!postJsonData() || testResults()?.loading">
+          🚀 Envoyer la requête POST
+        </button>
+        
+        <!-- Aperçu de la réponse attendue -->
+        <div class="expected-response">
+          <h4>📄 Exemple de réponse attendue:</h4>
+          <pre class="example-json">{{ selectedPostEndpoint().example | json }}</pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="docs-footer">
+    <div class="container">
+      <p>&copy; 2025 Fixer Solutions - Documentation API MongoDB</p>
+    </div>
+  </footer>
+</div>

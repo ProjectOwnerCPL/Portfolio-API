@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test POST - Fixer Solutions API</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header h1 {
+            color: #4a5568;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 25px;
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card h2 {
+            color: #4a5568;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #4a5568;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .submit-btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+            width: 100%;
+            transition: transform 0.2s ease;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .result.success {
+            background: #f0fff4;
+            border: 2px solid #48bb78;
+            color: #22543d;
+        }
+        
+        .result.error {
+            background: #fed7d7;
+            border: 2px solid #e53e3e;
+            color: #742a2a;
+        }
+        
+        .skills-input {
+            margin-top: 10px;
+        }
+        
+        .skill-tag {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            margin: 2px;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧪 Test POST Requests</h1>
+            <h2 style="color: #667eea;">Fixer Solutions API</h2>
+            <p>Interface pour tester les créations d'employés, projets et départements</p>
+        </div>
+        
+        <div class="grid">
+            <!-- Créer un employé -->
+            <div class="card">
+                <h2>👤 Créer un Employé</h2>
+                <form id="employee-form">
+                    <div class="form-group">
+                        <label>Prénom *</label>
+                        <input type="text" name="firstName" required placeholder="Ex: Jean">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Nom *</label>
+                        <input type="text" name="lastName" required placeholder="Ex: Dupont">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Poste *</label>
+                        <input type="text" name="position" required placeholder="Ex: Développeur Frontend">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Département *</label>
+                        <select name="department" required>
+                            <option value="">Sélectionner...</option>
+                            <option value="Développement">Développement</option>
+                            <option value="Design">Design</option>
+                            <option value="IT">IT</option>
+                            <option value="Analytics">Analytics</option>
+                            <option value="Management">Management</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Email *</label>
+                        <input type="email" name="email" required placeholder="prenom.nom@fixer.com">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Téléphone</label>
+                        <input type="tel" name="phone" placeholder="+1-514-555-0100">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Salaire * (30,000 - 200,000)</label>
+                        <input type="number" name="salary" required min="30000" max="200000" placeholder="85000">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Compétences (séparées par des virgules)</label>
+                        <input type="text" name="skills" placeholder="React, Node.js, MongoDB">
+                    </div>
+                    
+                    <button type="submit" class="submit-btn">Créer l'Employé</button>
+                </form>
+                
+                <div id="employee-result"></div>
+            </div>
+            
+            <!-- Créer un projet -->
+            <div class="card">
+                <h2>📋 Créer un Projet</h2>
+                <form id="project-form">
+                    <div class="form-group">
+                        <label>Nom du Projet *</label>
+                        <input type="text" name="name" required placeholder="Ex: Application Mobile">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Description *</label>
+                        <textarea name="description" rows="3" required placeholder="Décrire le projet..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Statut</label>
+                        <select name="status">
+                            <option value="En planification">En planification</option>
+                            <option value="En cours">En cours</option>
+                            <option value="En pause">En pause</option>
+                            <option value="Terminé">Terminé</option>
+                            <option value="Annulé">Annulé</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Date de début</label>
+                        <input type="date" name="startDate">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Date de fin</label>
+                        <input type="date" name="endDate">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Budget</label>
+                        <input type="number" name="budget" min="0" placeholder="150000">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Nom du Client</label>
+                        <input type="text" name="clientName" placeholder="Ex: TechCorp Inc">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Technologies (séparées par des virgules)</label>
+                        <input type="text" name="technologies" placeholder="React, Node.js, MongoDB">
+                    </div>
+                    
+                    <button type="submit" class="submit-btn">Créer le Projet</button>
+                </form>
+                
+                <div id="project-result"></div>
+            </div>
+            
+            <!-- Créer un département -->
+            <div class="card">
+                <h2>🏢 Créer un Département</h2>
+                <form id="department-form">
+                    <div class="form-group">
+                        <label>Nom du Département *</label>
+                        <input type="text" name="name" required placeholder="Ex: R&D">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Manager</label>
+                        <input type="text" name="manager" placeholder="Nom du responsable">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Nombre d'employés</label>
+                        <input type="number" name="employeeCount" min="0" placeholder="5">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Budget</label>
+                        <input type="number" name="budget" min="0" placeholder="300000">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea name="description" rows="3" placeholder="Description du département..."></textarea>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn">Créer le Département</button>
+                </form>
+                
+                <div id="department-result"></div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Fonction pour effectuer une requête POST
+        async function makePostRequest(url, data) {
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                return { success: response.ok, data: result };
+            } catch (error) {
+                return { success: false, data: { message: 'Erreur de connexion: ' + error.message } };
+            }
+        }
+        
+        // Fonction pour afficher le résultat
+        function displayResult(elementId, result) {
+            const element = document.getElementById(elementId);
+            element.className = `result ${result.success ? 'success' : 'error'}`;
+            element.textContent = JSON.stringify(result.data, null, 2);
+        }
+        
+        // Fonction pour traiter les arrays (skills, technologies)
+        function processArrayField(value) {
+            if (!value) return [];
+            return value.split(',').map(item => item.trim()).filter(item => item);
+        }
+        
+        // Form pour employé
+        document.getElementById('employee-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData.entries());
+            
+            // Traiter le salaire comme nombre
+            if (data.salary) data.salary = parseInt(data.salary);
+            
+            // Traiter les compétences comme array
+            if (data.skills) {
+                data.skills = processArrayField(data.skills);
+            }
+            
+            const result = await makePostRequest('http://localhost:3000/api/company-mongo/employees', data);
+            displayResult('employee-result', result);
+        });
+        
+        // Form pour projet
+        document.getElementById('project-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData.entries());
+            
+            // Traiter le budget comme nombre
+            if (data.budget) data.budget = parseInt(data.budget);
+            
+            // Traiter les technologies comme array
+            if (data.technologies) {
+                data.technologies = processArrayField(data.technologies);
+            }
+            
+            const result = await makePostRequest('http://localhost:3000/api/company-mongo/projects', data);
+            displayResult('project-result', result);
+        });
+        
+        // Form pour département
+        document.getElementById('department-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData.entries());
+            
+            // Traiter les nombres
+            if (data.employeeCount) data.employeeCount = parseInt(data.employeeCount);
+            if (data.budget) data.budget = parseInt(data.budget);
+            
+            const result = await makePostRequest('http://localhost:3000/api/company-mongo/departments', data);
+            displayResult('department-result', result);
+        });
+    </script>
+</body>
+</html>

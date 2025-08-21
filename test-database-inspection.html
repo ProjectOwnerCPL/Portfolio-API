@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔍 Inspection de la Base de Données - Fixer Solutions</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #667eea;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+        }
+        .endpoint-card {
+            background: #f8f9ff;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+        .endpoint-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .endpoint-url {
+            font-family: 'Courier New', monospace;
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .test-btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        .test-btn:hover { transform: translateY(-2px); }
+        .result-area {
+            background: #1a1a1a;
+            color: #00ff00;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            max-height: 400px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            display: none;
+        }
+        .status { padding: 5px 10px; border-radius: 3px; color: white; font-size: 0.8rem; }
+        .status-200 { background: #48bb78; }
+        .status-400 { background: #e53e3e; }
+        .status-500 { background: #d69e2e; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Inspection Base de Données MongoDB</h1>
+        <p style="text-align: center; color: #666; margin-bottom: 30px;">
+            Outil pour examiner les vraies données de votre API MongoDB
+        </p>
+
+        <div id="endpoints">
+            <!-- Les endpoints seront ajoutés ici par JavaScript -->
+        </div>
+
+        <div style="margin-top: 30px; padding: 20px; background: #e6fffa; border-radius: 10px;">
+            <h3 style="color: #2d3748;">🔧 Instructions :</h3>
+            <ul style="margin-left: 20px; color: #4a5568;">
+                <li>Cliquez sur "Tester" pour voir les vraies données de chaque endpoint</li>
+                <li>Les données JSON s'afficheront dans la zone de résultat</li>
+                <li>Cela vous permettra de voir exactement ce qui est dans votre BD</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        const endpoints = [
+            {
+                name: "📊 Statistiques Compagnie (Le Principal)",
+                url: "/api/company-mongo/stats",
+                description: "Les vraies statistiques complètes de Fixer Solutions"
+            },
+            {
+                name: "👥 Employés MongoDB",
+                url: "/api/company-mongo/employees",
+                description: "Tous les employés de la base MongoDB"
+            },
+            {
+                name: "🚀 Projets MongoDB",
+                url: "/api/company-mongo/projects", 
+                description: "Tous les projets de la base MongoDB"
+            },
+            {
+                name: "🏢 Info Compagnie",
+                url: "/api/company-mongo/",
+                description: "Informations générales de la compagnie"
+            },
+            {
+                name: "📈 Données Financières",
+                url: "/api/company-mongo/financial",
+                description: "Données financières de la compagnie"
+            },
+            {
+                name: "📞 Statistiques Contact",
+                url: "/api/contact/stats",
+                description: "Statistiques des messages de contact"
+            }
+        ];
+
+        function createEndpointCard(endpoint) {
+            return `
+                <div class="endpoint-card">
+                    <div class="endpoint-header">
+                        <h3>${endpoint.name}</h3>
+                        <button class="test-btn" onclick="testEndpoint('${endpoint.url}', '${endpoint.name}')">
+                            🧪 Tester
+                        </button>
+                    </div>
+                    <div class="endpoint-url">${endpoint.url}</div>
+                    <p style="color: #666;">${endpoint.description}</p>
+                    <div id="status-${endpoint.url.replace(/[^a-zA-Z0-9]/g, '')}" style="margin: 10px 0;"></div>
+                    <div id="result-${endpoint.url.replace(/[^a-zA-Z0-9]/g, '')}" class="result-area"></div>
+                </div>
+            `;
+        }
+
+        async function testEndpoint(url, name) {
+            const cleanId = url.replace(/[^a-zA-Z0-9]/g, '');
+            const statusEl = document.getElementById(`status-${cleanId}`);
+            const resultEl = document.getElementById(`result-${cleanId}`);
+            
+            statusEl.innerHTML = '🔄 Test en cours...';
+            resultEl.style.display = 'none';
+
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                const statusClass = response.status === 200 ? 'status-200' : 
+                                   response.status >= 400 ? 'status-400' : 'status-500';
+                
+                statusEl.innerHTML = `<span class="status ${statusClass}">
+                    ${response.status} ${response.statusText}
+                </span>`;
+
+                resultEl.textContent = JSON.stringify(data, null, 2);
+                resultEl.style.display = 'block';
+                
+                console.log(`${name}:`, data);
+            } catch (error) {
+                statusEl.innerHTML = `<span class="status status-500">❌ Erreur</span>`;
+                resultEl.textContent = `Erreur: ${error.message}`;
+                resultEl.style.display = 'block';
+                console.error(`Erreur ${name}:`, error);
+            }
+        }
+
+        // Initialiser la page
+        document.addEventListener('DOMContentLoaded', function() {
+            const endpointsContainer = document.getElementById('endpoints');
+            endpointsContainer.innerHTML = endpoints.map(createEndpointCard).join('');
+        });
+    </script>
+</body>
+</html>

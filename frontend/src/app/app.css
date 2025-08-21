@@ -1,0 +1,256 @@
+/* Styles globaux pour l'application */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+}
+
+.section {
+  margin-bottom: 3rem;
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+}
+
+.section h2 {
+  margin: 0 0 1.5rem 0;
+  font-size: 1.8rem;
+  color: #333;
+  border-bottom: 3px solid #667eea;
+  padding-bottom: 0.5rem;
+}
+
+/* Employés */
+.employees-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.employee-card {
+  background: linear-gradient(135deg, #f8f9ff 0%, #e8efff 100%);
+  border-radius: 8px;
+  padding: 1.5rem;
+  border-left: 4px solid #667eea;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.employee-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 24px rgba(102, 126, 234, 0.2);
+}
+
+.employee-card h3 {
+  margin: 0 0 0.5rem 0;
+  color: #333;
+  font-size: 1.3rem;
+}
+
+.role {
+  font-weight: 600;
+  color: #667eea;
+  margin: 0.25rem 0;
+}
+
+.department {
+  background: #667eea;
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 15px;
+  display: inline-block;
+  font-size: 0.9rem;
+  margin: 0.5rem 0;
+}
+
+.contact {
+  margin: 1rem 0 0 0;
+}
+
+.email, .phone {
+  display: block;
+  margin: 0.25rem 0;
+  color: #555;
+  font-size: 0.95rem;
+}
+
+/* Projets */
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 1.5rem;
+}
+
+.project-card {
+  background: linear-gradient(135deg, #fff8f0 0%, #ffebdb 100%);
+  border-radius: 8px;
+  padding: 1.5rem;
+  border-left: 4px solid #ff6b35;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.project-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 24px rgba(255, 107, 53, 0.2);
+}
+
+.project-card h3 {
+  margin: 0 0 1rem 0;
+  color: #333;
+  font-size: 1.4rem;
+}
+
+.description {
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.project-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 1rem 0;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.status {
+  padding: 0.25rem 0.75rem;
+  border-radius: 15px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: white;
+}
+
+.status-active, .status-actif {
+  background: #28a745;
+}
+
+.status-completed, .status-terminé {
+  background: #007bff;
+}
+
+.status-planning, .status-planification {
+  background: #ffc107;
+  color: #333;
+}
+
+.budget {
+  background: #28a745;
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 15px;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.technologies {
+  margin: 1rem 0;
+}
+
+.tech-tag {
+  background: #667eea;
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  margin: 0.25rem 0.25rem 0.25rem 0;
+  display: inline-block;
+}
+
+/* Actions */
+.actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.btn-secondary {
+  background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+  color: white;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+}
+
+/* Loading */
+.loading {
+  text-align: center;
+  padding: 2rem;
+  font-size: 1.2rem;
+  color: #667eea;
+  font-weight: 600;
+}
+
+/* Footer */
+.footer {
+  background: rgba(0,0,0,0.8);
+  color: white;
+  text-align: center;
+  padding: 2rem 0;
+  margin-top: 2rem;
+}
+
+.footer p {
+  margin: 0.5rem 0;
+}
+
+.footer a {
+  color: #667eea;
+  text-decoration: none;
+  margin: 0 0.5rem;
+}
+
+.footer a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .header h1 {
+    font-size: 2rem;
+  }
+  
+  .employees-grid,
+  .projects-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .project-meta {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .actions {
+    flex-direction: column;
+  }
+  
+  .btn {
+    width: 100%;
+    text-align: center;
+  }
+}

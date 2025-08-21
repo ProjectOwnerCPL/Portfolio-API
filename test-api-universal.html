@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test API Fixer - Production</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        .config-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+        
+        .config-section h3 {
+            margin-bottom: 10px;
+            color: #4a5568;
+        }
+        
+        #apiUrl {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card h2 {
+            color: #4a5568;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+        
+        .endpoint {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+        }
+        
+        .test-btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.2s ease;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .test-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .result {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+        
+        .result.success {
+            background: #f0fff4;
+            border: 2px solid #48bb78;
+            color: #22543d;
+        }
+        
+        .result.error {
+            background: #fed7d7;
+            border: 2px solid #e53e3e;
+            color: #742a2a;
+        }
+        
+        .result.loading {
+            background: #ebf8ff;
+            border: 2px solid #3182ce;
+            color: #2a69ac;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #4a5568;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        
+        .status-online { background: #48bb78; color: white; }
+        .status-offline { background: #e53e3e; color: white; }
+        .status-checking { background: #ed8936; color: white; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧪 Test API Fixer Solutions</h1>
+            <h2 style="color: #667eea;">Interface de Test Universelle</h2>
+            <p>Testez votre API depuis n'importe quel site web</p>
+        </div>
+        
+        <div class="config-section">
+            <h3>⚙️ Configuration de l'API</h3>
+            <input type="text" id="apiUrl" placeholder="URL de base de l'API" value="http://localhost:3000">
+            <div style="margin-top: 10px;">
+                <button class="test-btn" onclick="setLocalhost()">Local (localhost:3000)</button>
+                <button class="test-btn" onclick="setProduction()">Production (cpl-labs.com)</button>
+                <button class="test-btn" onclick="checkApiStatus()">Tester Connexion</button>
+                <span id="apiStatus" class="status-indicator status-checking">Vérification...</span>
+            </div>
+        </div>
+        
+        <div class="grid">
+            <!-- Tests GET -->
+            <div class="card">
+                <h2>📊 Tests GET (Lecture)</h2>
+                
+                <div class="endpoint">
+                    <h4>🏢 Informations Compagnie</h4>
+                    <button class="test-btn" onclick="testGet('info', '/api/company-mongo/info')">Tester</button>
+                    <div id="result-info" class="result"></div>
+                </div>
+                
+                <div class="endpoint">
+                    <h4>👥 Liste des Employés</h4>
+                    <button class="test-btn" onclick="testGet('employees', '/api/company-mongo/employees')">Tester</button>
+                    <div id="result-employees" class="result"></div>
+                </div>
+                
+                <div class="endpoint">
+                    <h4>📋 Liste des Projets</h4>
+                    <button class="test-btn" onclick="testGet('projects', '/api/company-mongo/projects')">Tester</button>
+                    <div id="result-projects" class="result"></div>
+                </div>
+                
+                <div class="endpoint">
+                    <h4>🏢 Départements</h4>
+                    <button class="test-btn" onclick="testGet('departments', '/api/company-mongo/departments')">Tester</button>
+                    <div id="result-departments" class="result"></div>
+                </div>
+                
+                <div class="endpoint">
+                    <h4>💰 Données Financières</h4>
+                    <button class="test-btn" onclick="testGet('financial', '/api/company-mongo/financial')">Tester</button>
+                    <div id="result-financial" class="result"></div>
+                </div>
+            </div>
+            
+            <!-- Tests POST -->
+            <div class="card">
+                <h2>➕ Tests POST (Création)</h2>
+                
+                <div class="endpoint">
+                    <h4>👤 Créer un Employé</h4>
+                    <div class="form-group">
+                        <label>Prénom:</label>
+                        <input type="text" id="emp-firstName" value="Test">
+                    </div>
+                    <div class="form-group">
+                        <label>Nom:</label>
+                        <input type="text" id="emp-lastName" value="User">
+                    </div>
+                    <div class="form-group">
+                        <label>Email:</label>
+                        <input type="email" id="emp-email" value="test.user@fixer.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Département:</label>
+                        <select id="emp-department">
+                            <option value="Développement">Développement</option>
+                            <option value="Design">Design</option>
+                            <option value="IT">IT</option>
+                            <option value="Analytics">Analytics</option>
+                            <option value="Management">Management</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Salaire:</label>
+                        <input type="number" id="emp-salary" value="75000">
+                    </div>
+                    <button class="test-btn" onclick="createEmployee()">Créer Employé</button>
+                    <div id="result-create-employee" class="result"></div>
+                </div>
+                
+                <div class="endpoint">
+                    <h4>📋 Créer un Projet</h4>
+                    <div class="form-group">
+                        <label>Nom du Projet:</label>
+                        <input type="text" id="proj-name" value="Test Project">
+                    </div>
+                    <div class="form-group">
+                        <label>Description:</label>
+                        <input type="text" id="proj-description" value="Un projet de test">
+                    </div>
+                    <div class="form-group">
+                        <label>Budget:</label>
+                        <input type="number" id="proj-budget" value="100000">
+                    </div>
+                    <button class="test-btn" onclick="createProject()">Créer Projet</button>
+                    <div id="result-create-project" class="result"></div>
+                </div>
+            </div>
+            
+            <!-- Tests avancés -->
+            <div class="card">
+                <h2>🔍 Tests Avancés</h2>
+                
+                <div class="endpoint">
+                    <h4>🔍 Recherche</h4>
+                    <input type="text" id="search-term" placeholder="Terme de recherche" value="Marie">
+                    <button class="test-btn" onclick="searchData()">Rechercher</button>
+                    <div id="result-search" class="result"></div>
+                </div>
+                
+                <div class="endpoint">
+                    <h4>📊 Statistiques</h4>
+                    <button class="test-btn" onclick="testGet('stats', '/api/company-mongo/stats')">Obtenir Stats</button>
+                    <div id="result-stats" class="result"></div>
+                </div>
+                
+                <div class="endpoint">
+                    <h4>🗄️ Info Base de Données</h4>
+                    <button class="test-btn" onclick="testGet('dbinfo', '/api/company-mongo/db-info')">Info DB</button>
+                    <div id="result-dbinfo" class="result"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Configuration
+        function setLocalhost() {
+            document.getElementById('apiUrl').value = 'http://localhost:3000';
+            checkApiStatus();
+        }
+        
+        function setProduction() {
+            document.getElementById('apiUrl').value = 'https://cpl-labs.com/fixer-api';
+            checkApiStatus();
+        }
+        
+        function getApiUrl() {
+            return document.getElementById('apiUrl').value.replace(/\/$/, '');
+        }
+        
+        // Vérification du statut de l'API
+        async function checkApiStatus() {
+            const statusElement = document.getElementById('apiStatus');
+            statusElement.textContent = 'Vérification...';
+            statusElement.className = 'status-indicator status-checking';
+            
+            try {
+                const response = await fetch(getApiUrl() + '/', { method: 'GET' });
+                if (response.ok) {
+                    statusElement.textContent = '✅ En ligne';
+                    statusElement.className = 'status-indicator status-online';
+                } else {
+                    statusElement.textContent = '❌ Erreur ' + response.status;
+                    statusElement.className = 'status-indicator status-offline';
+                }
+            } catch (error) {
+                statusElement.textContent = '❌ Hors ligne';
+                statusElement.className = 'status-indicator status-offline';
+            }
+        }
+        
+        // Test GET générique
+        async function testGet(resultId, endpoint) {
+            const resultDiv = document.getElementById(`result-${resultId}`);
+            resultDiv.className = 'result loading';
+            resultDiv.textContent = '⏳ Chargement...';
+            
+            try {
+                const url = getApiUrl() + endpoint;
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                resultDiv.className = response.ok ? 'result success' : 'result error';
+                resultDiv.textContent = `Status: ${response.status} ${response.statusText}\n\n${JSON.stringify(data, null, 2)}`;
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.textContent = `❌ Erreur de connexion:\n${error.message}`;
+            }
+        }
+        
+        // Créer un employé
+        async function createEmployee() {
+            const resultDiv = document.getElementById('result-create-employee');
+            resultDiv.className = 'result loading';
+            resultDiv.textContent = '⏳ Création de l\'employé...';
+            
+            const employeeData = {
+                firstName: document.getElementById('emp-firstName').value,
+                lastName: document.getElementById('emp-lastName').value,
+                email: document.getElementById('emp-email').value,
+                department: document.getElementById('emp-department').value,
+                position: "Position de Test",
+                salary: parseInt(document.getElementById('emp-salary').value)
+            };
+            
+            try {
+                const url = getApiUrl() + '/api/company-mongo/employees';
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(employeeData)
+                });
+                
+                const data = await response.json();
+                
+                resultDiv.className = response.ok ? 'result success' : 'result error';
+                resultDiv.textContent = `Status: ${response.status} ${response.statusText}\n\n${JSON.stringify(data, null, 2)}`;
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.textContent = `❌ Erreur de connexion:\n${error.message}`;
+            }
+        }
+        
+        // Créer un projet
+        async function createProject() {
+            const resultDiv = document.getElementById('result-create-project');
+            resultDiv.className = 'result loading';
+            resultDiv.textContent = '⏳ Création du projet...';
+            
+            const projectData = {
+                name: document.getElementById('proj-name').value,
+                description: document.getElementById('proj-description').value,
+                budget: parseInt(document.getElementById('proj-budget').value),
+                status: "En planification",
+                clientName: "Test Client"
+            };
+            
+            try {
+                const url = getApiUrl() + '/api/company-mongo/projects';
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(projectData)
+                });
+                
+                const data = await response.json();
+                
+                resultDiv.className = response.ok ? 'result success' : 'result error';
+                resultDiv.textContent = `Status: ${response.status} ${response.statusText}\n\n${JSON.stringify(data, null, 2)}`;
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.textContent = `❌ Erreur de connexion:\n${error.message}`;
+            }
+        }
+        
+        // Recherche
+        async function searchData() {
+            const searchTerm = document.getElementById('search-term').value;
+            const endpoint = `/api/company-mongo/search?query=${encodeURIComponent(searchTerm)}`;
+            await testGet('search', endpoint);
+        }
+        
+        // Initialisation
+        window.onload = function() {
+            checkApiStatus();
+        };
+    </script>
+</body>
+</html>
