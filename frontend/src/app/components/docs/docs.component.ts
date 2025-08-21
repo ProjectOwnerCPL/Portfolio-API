@@ -2,6 +2,7 @@ import { Component, signal, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { MockApiService } from '../../services/mock-api.service';
 
 @Component({
   selector: 'app-docs',
@@ -19,9 +20,9 @@ export class DocsComponent implements OnInit {
   protected readonly currentMode = signal<'GET' | 'POST'>('GET');
   protected readonly selectedPostEndpoint = signal<any>(null);
   protected readonly postJsonData = signal<string>('');
-  private readonly apiUrl = '/api';
+  private readonly apiUrl = '/api'; // Garde pour compatibilité
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private mockApi: MockApiService) {}
 
   ngOnInit() {
     this.loadStats();
@@ -253,34 +254,26 @@ export class DocsComponent implements OnInit {
     ]);
   }
 
-  loadStats() {
+  async loadStats() {
     this.loading.set(true);
     
-    // Charger les stats complètes de la compagnie
-    this.http.get(`${this.apiUrl}/company-mongo/stats`).subscribe({
-      next: (companyStats: any) => {
-        this.stats.set({ 
-          ...this.stats(), 
-          company: companyStats.data || companyStats 
-        });
-      },
-      error: (error) => console.error('Erreur stats compagnie:', error)
-    });
-
-    // Charger les stats des contacts
-    this.http.get(`${this.apiUrl}/contact/stats`).subscribe({
-      next: (contactStats: any) => {
-        this.stats.set({ 
-          ...this.stats(), 
-          contact: contactStats.data || contactStats 
-        });
-        this.loading.set(false);
-      },
-      error: (error) => {
-        console.error('Erreur stats contact:', error);
-        this.loading.set(false);
-      }
-    });
+    try {
+      // Utilise le service mock au lieu de l'API réelle
+      const [stats, company] = await Promise.all([
+        this.mockApi.getStats(),
+        this.mockApi.getCompany()
+      ]);
+      
+      this.stats.set({ 
+        ...stats,
+        company: company
+      });
+      
+      this.loading.set(false);
+    } catch (error) {
+      console.error('Erreur chargement stats:', error);
+      this.loading.set(false);
+    }
   }
 
   async testEndpoint(endpoint: any) {
@@ -290,7 +283,8 @@ export class DocsComponent implements OnInit {
     this.scrollToJsonSection();
     
     try {
-      const response = await this.http.get(endpoint.url).toPromise();
+      // Utilise le service mock au lieu de faire des appels HTTP réels
+      const response = await this.mockApi.testEndpoint(endpoint.url, endpoint.method);
       this.testResults.set({
         loading: false,
         endpoint: endpoint.name,
