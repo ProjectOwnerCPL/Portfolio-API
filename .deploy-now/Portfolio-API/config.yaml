@@ -1,0 +1,30 @@
+# IONOS Deploy Now Configuration
+---
+# This configuration tells IONOS to run your app as a Node.js application
+runtime: nodejs18
+
+# Start command for your Node.js server
+start: node server.js
+
+# Environment variables for production
+env:
+  NODE_ENV: production
+
+# Build configuration
+build:
+  commands:
+    - npm ci --production
+    - cd frontend && npm ci && npm run build
+  
+# Static files to serve (for assets)
+static:
+  - path: /dist/browser
+    fallback: index.html
+
+# Port configuration (IONOS will override this)
+port: 3000
+
+# Health check endpoint
+healthcheck:
+  path: /api/portfolio
+  timeout: 30

@@ -80,6 +80,24 @@ app.get('/api/info', (req, res) => {
     });
 });
 
+// Route de santé pour diagnostiquer
+app.get('/health', (req, res) => {
+    const fs = require('fs');
+    const staticPath = path.join(__dirname, 'dist/browser');
+    const indexExists = fs.existsSync(path.join(__dirname, 'dist/browser/index.html'));
+    
+    res.json({
+        status: 'OK',
+        timestamp: new Date().toISOString(),
+        environment: process.env.NODE_ENV || 'development',
+        port: PORT,
+        staticPath: staticPath,
+        indexHtmlExists: indexExists,
+        workingDirectory: __dirname,
+        mongoConnected: !!companyMongoRoutes
+    });
+});
+
 // Routes API (AVANT les fichiers statiques)
 app.use('/api/portfolio', portfolioRoutes);
 app.use('/api/projects', projectRoutes);
@@ -92,7 +110,9 @@ if (companyMongoRoutes) {
 }
 
 // Servir les fichiers statiques Angular (APRÈS les routes API)
-app.use(express.static(path.join(__dirname, 'dist/browser')));
+const staticPath = path.join(__dirname, 'dist/browser');
+console.log('📁 Tentative de servir les fichiers statiques depuis:', staticPath);
+app.use(express.static(staticPath));
 
 // Route de démonstration API (changée vers /demo)
 app.get('/demo', (req, res) => {
@@ -101,7 +121,9 @@ app.get('/demo', (req, res) => {
 
 // Route principale - Application Angular directement
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'dist/browser/index.html'));
+    const indexPath = path.join(__dirname, 'dist/browser/index.html');
+    console.log('📄 Tentative de servir index.html depuis:', indexPath);
+    res.sendFile(indexPath);
 });
 
 // Route catch-all pour Angular (pour le routage SPA)

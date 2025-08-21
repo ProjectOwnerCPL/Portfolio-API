@@ -14,7 +14,7 @@ on:
         type: string
 
 env:
-  DEPLOYMENT_FOLDER: dist/browser
+  DEPLOYMENT_FOLDER: ./
 
 jobs:
 # Please do not rename this job
@@ -36,10 +36,12 @@ jobs:
         env:
           CI: true
           SITE_URL: ${{ inputs.site-url }}
+          NODE_ENV: production
+          MONGODB_URI: ${{ secrets.MONGODB_URI }}
+          FRONTEND_URL: ${{ inputs.site-url }}
         run: |
-          npm ci
+          npm ci --production
           cd frontend && npm ci && npm run build
-          cd ..
 
 # Please do not touch the following action
       - name: Store deployment content
