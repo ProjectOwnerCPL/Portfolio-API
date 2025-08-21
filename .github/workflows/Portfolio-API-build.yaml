@@ -40,8 +40,9 @@ jobs:
           SITE_URL: ${{ inputs.site-url }}
           FRONTEND_URL: ${{ inputs.site-url }}
         run: |
-          npm ci --production
+          npm ci
           cd frontend && npm ci && npm run build
+          cd .. && ls -la dist/browser/
 
 # Please do not touch the following action
       - name: Store deployment content
