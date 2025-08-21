@@ -35,6 +35,9 @@ jobs:
         with:
           node-version: v22.x
 
+      - name: Install Angular CLI
+        run: npm install -g @angular/cli
+
       - name: Build Node assets
         env:
           CI: true
