@@ -4,10 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Portfolio API - Redirection</title>
-    <script>
-        // Redirection automatique vers l'application
-        window.location.href = '/app';
-    </script>
+    <meta http-equiv="refresh" content="2;url=/app">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -42,27 +39,30 @@
             color: white;
             text-decoration: underline;
             margin: 0 1rem;
+            padding: 0.5rem 1rem;
+            border: 2px solid white;
+            border-radius: 5px;
+            display: inline-block;
+            transition: all 0.3s;
+        }
+        a:hover {
+            background: white;
+            color: #667eea;
         }
     </style>
 </head>
 <body>
-    <div class="loading">🚀 Chargement de l'application Portfolio API...</div>
+    <div class="loading">🚀 Redirection vers l'application...</div>
     <div class="spinner"></div>
     
-    <p style="margin-top: 2rem;">
-        Si la redirection ne fonctionne pas :
-        <a href="/app">Application</a> | 
-        <a href="/api/info">API Info</a> | 
-        <a href="/demo">Démo API</a>
+    <p style="margin-top: 2rem; font-size: 0.9rem;">
+        Redirection automatique dans 2 secondes...
     </p>
     
-    <script>
-        // Fallback après 3 secondes
-        setTimeout(() => {
-            if (window.location.pathname === '/') {
-                window.location.href = '/app';
-            }
-        }, 3000);
-    </script>
+    <div style="margin-top: 2rem;">
+        <a href="/app">📱 Application</a>
+        <a href="/api/info">ℹ️ API Info</a>
+        <a href="/demo">🧪 Démo API</a>
+    </div>
 </body>
 </html>
