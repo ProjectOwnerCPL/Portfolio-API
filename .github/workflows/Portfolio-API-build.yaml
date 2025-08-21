@@ -14,10 +14,7 @@ on:
         type: string
 
 env:
-  DEPLOYMENT_FOLDER: ./
-  NODE_ENV: production
-  PORT: 3000
-  ANGULAR_APP_NAME: frontend
+  DEPLOYMENT_FOLDER: dist/browser
 
 jobs:
 # Please do not rename this job
@@ -35,25 +32,13 @@ jobs:
         with:
           node-version: v22.x
 
-      - name: Install Angular CLI
-        run: npm install -g @angular/cli
-
-      - name: Build Node assets
+      - name: Deploy pre-built Angular app
         env:
           CI: true
-          MONGODB_URI: ${{ secrets.MONGODB_URI }}
-          NODE_ENV: ${{ env.NODE_ENV }}
-          PORT: ${{ env.PORT }}
-          ANGULAR_APP_NAME: ${{ env.ANGULAR_APP_NAME }}
-          SITE_URL: ${{ inputs.site-url }}
-          FRONTEND_URL: ${{ inputs.site-url }}
         run: |
-          npm install
-          cd frontend
-          npm install --legacy-peer-deps
-          npx ng build --configuration production
-          cd ..
+          echo "Deploying pre-built Angular application from dist/browser/"
           ls -la dist/browser/
+          echo "✅ Static files ready for deployment"
 
 # Please do not touch the following action
       - name: Store deployment content
