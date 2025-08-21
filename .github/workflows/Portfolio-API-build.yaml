@@ -50,8 +50,8 @@ jobs:
         run: |
           npm install
           cd frontend
-          npm ci
-          npx @angular/cli@20.2.0 build --configuration production
+          npm ci --legacy-peer-deps
+          npx ng build --configuration production
           cd ..
           ls -la dist/browser/
 
