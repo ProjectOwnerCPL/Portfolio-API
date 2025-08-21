@@ -49,7 +49,10 @@ jobs:
           FRONTEND_URL: ${{ inputs.site-url }}
         run: |
           npm install
-          npm run build
+          cd frontend
+          npm ci
+          npx @angular/cli@20.2.0 build --configuration production
+          cd ..
           ls -la dist/browser/
 
 # Please do not touch the following action
