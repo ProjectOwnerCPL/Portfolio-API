@@ -4,7 +4,9 @@
   "description": "API REST pour un portfolio professionnel",
   "main": "server.js",
   "scripts": {
+    "build:frontend": "cd frontend && npm install && npm run build -- --configuration production && cd ..",
     "start": "node server.js",
+    "build": "npm run build:frontend",
     "dev": "nodemon server.js",
     "test": "node test-api.js",
     "test-mongodb": "node test-mongodb.js",
@@ -16,7 +18,6 @@
     "ng-build": "cd frontend && ng build",
     "ng-build-prod": "cd frontend && ng build --configuration production",
     "ng-serve": "cd frontend && ng serve --proxy-config proxy.conf.json",
-    "build": "cd frontend && ng build --configuration production",
     "dev:full": "concurrently \"npm run dev\" \"npm run ng-serve\""
   },
   "keywords": [
