@@ -14,7 +14,7 @@ on:
         type: string
 
 env:
-  DEPLOYMENT_FOLDER: ./
+  DEPLOYMENT_FOLDER: dist/browser
 
 jobs:
 # Please do not rename this job
@@ -36,7 +36,10 @@ jobs:
         env:
           CI: true
           SITE_URL: ${{ inputs.site-url }}
-        run: npm ci
+        run: |
+          npm ci
+          cd frontend && npm ci && npm run build
+          cd ..
 
 # Please do not touch the following action
       - name: Store deployment content

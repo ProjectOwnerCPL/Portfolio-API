@@ -8,7 +8,7 @@ frontend/node_modules/
 .env.production
 
 # Build outputs
-dist/
+# dist/ # Commented out for IONOS deployment
 frontend/dist/
 
 # Logs
