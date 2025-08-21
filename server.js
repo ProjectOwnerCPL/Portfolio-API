@@ -92,15 +92,20 @@ if (companyMongoRoutes) {
 }
 
 // Servir les fichiers statiques Angular (APRÈS les routes API)
-app.use(express.static(path.join(__dirname, 'dist/browser')));
+app.use('/app', express.static(path.join(__dirname, 'dist/browser')));
 
 // Route de démonstration API (changée vers /demo)
 app.get('/demo', (req, res) => {
     res.sendFile(path.join(__dirname, 'api-demo.html'));
 });
 
-// Route principale - Application Angular
+// Route principale - Page d'accueil avec redirection
 app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+// Route pour l'application Angular
+app.get('/app', (req, res) => {
     res.sendFile(path.join(__dirname, 'dist/browser/index.html'));
 });
 
