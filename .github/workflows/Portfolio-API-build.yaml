@@ -1,7 +1,7 @@
 # To better understand this file read this:
 # https://docs.ionos.space/docs/github-actions-customization/
 
-name: "Deploy Now: Execute Build"
+name: "Portfolio API + Angular"
 
 on:
   workflow_call:
@@ -15,6 +15,9 @@ on:
 
 env:
   DEPLOYMENT_FOLDER: ./
+  NODE_ENV: production
+  PORT: 3000
+  ANGULAR_APP_NAME: frontend
 
 jobs:
 # Please do not rename this job
@@ -36,11 +39,13 @@ jobs:
         env:
           CI: true
           MONGODB_URI: ${{ secrets.MONGODB_URI }}
-          NODE_ENV: production
+          NODE_ENV: ${{ env.NODE_ENV }}
+          PORT: ${{ env.PORT }}
+          ANGULAR_APP_NAME: ${{ env.ANGULAR_APP_NAME }}
           SITE_URL: ${{ inputs.site-url }}
           FRONTEND_URL: ${{ inputs.site-url }}
         run: |
-          npm ci
+          npm install
           npm run build
           ls -la dist/browser/
 
